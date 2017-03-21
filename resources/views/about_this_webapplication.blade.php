@@ -8,7 +8,7 @@
 <p>Stock information, based on production and purchase data.</p>
 <p>Management information and graphs</p>
 <p>CRM</p>
-<p>....</p>
+<p>.....</p>
 <p>....</p>
 
 </p>
