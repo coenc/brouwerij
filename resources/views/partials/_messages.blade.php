@@ -1,0 +1,18 @@
+<!-- Flash messages -->
+@if(Session::has('success'))
+	<div class="alert alert-success" role="alert">
+		<strong>Succes</strong> {{Session::get('success')}}
+	</div>
+@endif
+
+<!-- Error messages -->
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
