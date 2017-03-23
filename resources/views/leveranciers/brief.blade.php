@@ -34,7 +34,6 @@
 			<div id="printableArea">
 				
 				{{ $leverancier->naam or ''}}<br>
-				{{ $leverancier->factuurnaam or '' }}<br>
 				{{ $leverancier->factuuradres  or ''}}<br>
 				{{ $leverancier->factuurpostcode  or ''}}<br>
 				{{ $leverancier->factuurplaats  or ''}}<br>
@@ -56,7 +55,7 @@
 				<br>
 				<br>
 					{{$group->groupname or ''}}<br>
-					{{$group->adres or ''}}<br>
+					{{$group->adres or ''}} {{$group->postcode or ''}}<br>
 					{{$group->woonplaats or ''}} 				
 			</div>
 		</div>

@@ -33,13 +33,12 @@
 			<div id="printableArea">
 				
 				<?php echo e(isset($leverancier->naam) ? $leverancier->naam : ''); ?><br>
-				<?php echo e(isset($leverancier->factuurnaam) ? $leverancier->factuurnaam : ''); ?><br>
 				<?php echo e(isset($leverancier->factuuradres) ? $leverancier->factuuradres : ''); ?><br>
 				<?php echo e(isset($leverancier->factuurpostcode) ? $leverancier->factuurpostcode : ''); ?><br>
 				<?php echo e(isset($leverancier->factuurplaats) ? $leverancier->factuurplaats : ''); ?><br>
 				<br>
 				<br>
-				Amsterdam, <?php echo e(date("d M Y")); ?><br>
+				Amsterdam, <?php echo e(date("d MM Y")); ?><br>
 				<br>
 				Geachte heer, mevrouw <?php echo e($leverancier->factuurnaam); ?>,<br>
 				<br>
@@ -55,7 +54,7 @@
 				<br>
 				<br>
 					<?php echo e(isset($group->groupname) ? $group->groupname : ''); ?><br>
-					<?php echo e(isset($group->adres) ? $group->adres : ''); ?><br>
+					<?php echo e(isset($group->adres) ? $group->adres : ''); ?> <?php echo e(isset($group->postcode) ? $group->postcode : ''); ?><br>
 					<?php echo e(isset($group->woonplaats) ? $group->woonplaats : ''); ?> 				
 			</div>
 		</div>
