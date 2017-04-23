@@ -3,12 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Accijnstarif extends Model
 {
 	protected $table = 'accijnstarifs';
 
-    // public function beersorts(){
-    // 	return $this->hasMany('App\Beersort', 'accijnstarif_id');
-    // }
 }

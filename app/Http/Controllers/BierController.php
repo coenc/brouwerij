@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Beersort;
 use App\Beercategory;
 use App\Accijnstarif;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Illuminate\Http\Request;
 use Response;
 Use Log;
 use Validator;
-use Vendor\Intervention\image\Image;
-//use vendor\ezyang\htmlpurifier\HTMLPurifier;
+use File;
+use Image;
+use Purifier;
 use Illuminate\Support\Facades\Storage;
 
 class BierController extends Controller
@@ -28,12 +30,19 @@ class BierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $productcat = NULL)
     {
+
         $group_id = Auth::user()->group->id;
-        // $biersrtn = Beersort::where('group_id', $group_id)->get()->sortBy('omschrijving');
-        $biersrtn = Beersort::all()->sortBy('omschrijving');
-        // $biercategorieen = Beercategory::where('group_id', $group_id)->get()->sortBy('omschrijving');
+
+        // $productcategory = $request['cat'];
+
+        if(isset($productcat)){
+            $biersrtn = Beersort::ofCategory($productcat)->get()->sortBy('omschrijving');
+        }else{
+            $biersrtn = Beersort::all()->sortBy('omschrijving');
+        }
+
         $biercategorieen = Beercategory::all()->sortBy('omschrijving');
         $accijnstarieven = Accijnstarif::all();
 
@@ -43,13 +52,13 @@ class BierController extends Controller
             $beercats[$biercategorie->id] = $biercategorie->omschrijving; 
         }
 
-        //Build array for dropdown accijnstarief        
+        //Build array for dropdown accijnstarief
         $tarifs = array();
         foreach ($accijnstarieven as $accijnstarief) {
-            // $tarifs[$accijnstarief->id] = '€ ' . $accijnstarief->tariefperhl;
             $tarifs[$accijnstarief->id] = $accijnstarief->percentageplato;
         }
 
+        //Build array for dropdown vast/seizoen
         $vastofseizoen_dropdown = array();
         $vastofseizoen_dropdown['V'] = 'Vast';
         $vastofseizoen_dropdown['S'] = 'Seizoen';
@@ -57,6 +66,7 @@ class BierController extends Controller
         $maxfilesize = ini_get("upload_max_filesize");
 
         return view('biersoorten.index')->with('biersoorten', $biersrtn)
+                                            ->with('group_id', $group_id)
                                             ->with('biercategorieen', $beercats)
                                             ->with('maxfilesize', $maxfilesize)
                                             ->with('vastofseizoen_dropdown', $vastofseizoen_dropdown)
@@ -73,6 +83,7 @@ class BierController extends Controller
         //
     }
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -81,56 +92,21 @@ class BierController extends Controller
      */
     public function store(Request $request)
     {   
-        Log::info($request->all());
+
+        $group_id = Auth::user()->group->id;
 
         //Validate input
-        // $validator = Validator::make($request->all(), [
-        //     'code' => 'required|max:3',
-        //     'omschrijving' => 'required|min:3',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            // 'code' => 'required|max:3',
+            // 'omschrijving' => 'required|min:3',
+        ]);
         
-        // //Show validation errors. WERKT NOG NIET BIJ MODAL(!) INPUT SCREEN!!!!!
+        // //Show validation errors.
         // if ($validator->fails()) {
         //       return redirect('/biersoorten')
         //       ->withInput()
         //       ->withErrors($validator);
         // }
-
-        $data = array();
-
-        if(isset($_GET['files']))
-        {  
-            Log::info('var files is set.');
-            $error = false;
-            $files = array();
-
-            $uploaddir = base_path() . '/public/images/biersoorten/';
-            $dest_filename = $request->omschrijving;
-            foreach($_FILES as $file)
-            {
-                if(move_uploaded_file($file['tmp_name'], $uploaddir . basename($file['name'])))
-                {
-                    $files[] = $uploaddir . $file['name'];
-                }
-                else
-                {
-                    $error = true;
-                }
-            }
-            $data = ($error) ? array('error' => 'There was an error uploading your files') : array('files' => $files);
-        }
-        else
-        {
-            $data = array('success' => 'File form was submitted', 'formData' => $_POST);
-        }
-
-        Log::info($data);
-
-
-
-
-
-
 
         //Get user input from $request object
         $userinput = array();
@@ -141,49 +117,26 @@ class BierController extends Controller
         $userinput['beercategory_id'] = $request->beercategory_id;
         $userinput['accijnstarif_id'] = $request->accijnstarif_id;
         $userinput['vastofseizoen'] = $request->vastofseizoen;
-        $userinput['fgmin'] = $request->has('fgmin') ? $request->input('fgmin') : NULL;
-        $userinput['fgmax'] = $request->has('fgmax') ? $request->input('fgmax') : NULL;
-        $userinput['ogmin'] = $request->has('ogmin') ? $request->input('ogmin') : NULL;
-        $userinput['ogmax'] = $request->has('ogmax') ? $request->input('ogmax') : NULL;
-        $userinput['alcvolmin'] = $request->has('alcvolmin') ? $request->input('alcvolmin') : NULL;
-        $userinput['alcvolmax'] = $request->has('alcvolmax') ? $request->input('alcvolmax') : NULL;
-        $userinput['ebumin'] = $request->has('ebumin') ? $request->input('ebumin') : NULL;
-        $userinput['ebumax'] = $request->has('ebumax') ? $request->input('ebumax') : NULL;
-        $userinput['ebcmin'] = $request->has('ebcmin') ? $request->input('ebcmin') : NULL;
-        $userinput['ebcmax'] = $request->has('ebcmax') ? $request->input('ebcmax') : NULL;
+        $userinput['fgmin'] = $request->fgmin ? $request->fgmin : 0;
+        $userinput['fgmax'] = $request->fgmin ? $request->fgmax : 0;
+        $userinput['ogmin'] = $request->ogmin ? $request->ogmin : 0;
+        $userinput['ogmax'] = $request->ogmax ? $request->ogmax : 0;
+        $userinput['alcvolmin'] = $request->alcvolmin ? $request->alcvolmin : 0;
+        $userinput['alcvolmax'] = $request->alcvolmax ? $request->alcvolmax : 0;
+        $userinput['ebumin'] = $request->ebumin ? $request->ebumin : 0;
+        $userinput['ebumax'] = $request->ebumax ? $request->ebumax : 0;
+        $userinput['ebcmin'] = $request->ebcmin ? $request->ebcmin : 0;
+        $userinput['ebcmax'] = $request->ebcmax ? $request->ebcmax : 0;
+        $userinput['group_id'] = $group_id;
 
-        // Check for uploaded image object
-        if ($request->image){
-            if ($request->image->isValid()){
-
-                // Log::info('File selected:');
-                // Log::info($request->image->getClientOriginalName());
-                // Log::info($request->image->getClientOriginalExtension());
-                // Log::info($request->image->getPathname());
-                // Log::info($request->image->getBasename());
-                // Log::info($request->image->getPathInfo());
-                // Log::info($request->image->getRealPath());
-                // Log::info($request->image->getSize());
-                // Log::info($request->image->getMimeType());
-                
-                //Save tmp file
-                $destinationPath = base_path() . '/public/images/biersoorten/';
-                $destinationFilename = ($request->omschrijving == '' ? $request->code : $request->omschrijving). '.' . $request->image->getClientOriginalExtension();
-                $userinput['image'] = $destinationFilename;
-                $request->file('image')->move($destinationPath , $destinationFilename);
-            }else{
-                Log::info('Not a valid beersort image file');
-            }
-        }else{
-            Log::info('No beersort file selected');
-        }
-
-        //Log::info('User input: ' . print_r($userinput, 1));
-        
-        $userinput['group_id'] = Auth::user()->group->id;
+        //Save beersort data 
         $bier = Beersort::create($userinput);
-
+        $nw_id = $bier->id;
+        
+        $this->handleImageFile($nw_id);
+        
         return Response::json($bier);
+
     }
 
     /**
@@ -218,29 +171,86 @@ class BierController extends Controller
      */
     public function update(Request $request, $bier_id)
     {
+        
+        //////////////////////////////////////////////////////////////////////////////////////
+        // Proces $_PUT data:                                                               //
+        // http://stackoverflow.com/questions/9464935/php-multipart-form-data-put-request   //
+        //////////////////////////////////////////////////////////////////////////////////////
+        
+        // Fetch content and determine boundary
+        $raw_data = file_get_contents('php://input');
+        $boundary = substr($raw_data, 0, strpos($raw_data, "\r\n"));
+
+        // Fetch each part
+        $parts = array_slice(explode($boundary, $raw_data), 1);
+        $data = array();
+
+        foreach ($parts as $part) {
+            // If this is the last part, break
+            if ($part == "--\r\n") break; 
+
+            // Separate content from headers
+            $part = ltrim($part, "\r\n");
+            list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);
+
+            // Parse the headers list
+            $raw_headers = explode("\r\n", $raw_headers);
+            $headers = array();
+            foreach ($raw_headers as $header) {
+                list($name, $value) = explode(':', $header);
+                $headers[strtolower($name)] = ltrim($value, ' '); 
+            } 
+
+            // Parse the Content-Disposition to get the field name, etc.
+            if (isset($headers['content-disposition'])) {
+                $filename = null;
+                preg_match(
+                    '/^(.+); *name="([^"]+)"(; *filename="([^"]+)")?/', 
+                    $headers['content-disposition'], 
+                    $matches
+                );
+                list(, $type, $name) = $matches;
+                isset($matches[4]) and $filename = $matches[4]; 
+
+                // handle your fields here
+                switch ($name) {
+                    // this is a file upload
+                    case 'userfile':
+                        console.log('Bestandje: ' + $filename);
+                        file_put_contents($filename, $body);
+                        break;
+                    // default for all other files is to populate $data
+                    default: 
+                        $data[$name] = substr($body, 0, strlen($body) - 2);
+                        break;
+                } 
+            }
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////
+
         $bier = Beersort::find($bier_id);
         
-        $bier->code = $request->code;
-        $bier->omschrijving = $request->omschrijving;
-        $bier->toelichting = $request->toelichting;
-        $bier->beercategory_id = $request->beercategory_id;
-        $bier->accijnstarif_id = $request->accijnstarif_id;
-        $bier->vastofseizoen = $request->vastofseizoen;
-        $bier->fgmin = $request->has('fgmin') ? $request->input('fgmin') : NULL;
-        $bier->fgmax = $request->has('fgmax') ? $request->input('fgmax') : NULL;
-        $bier->ogmin = $request->has('ogmin') ? $request->input('ogmin') : NULL;
-        $bier->ogmax = $request->has('ogmax') ? $request->input('ogmax') : NULL;
-        $bier->alcvolmin = $request->has('alcvolmin') ? $request->input('alcvolmin') : NULL;
-        $bier->alcvolmax = $request->has('alcvolmax') ? $request->input('alcvolmax') : NULL;
-        $bier->ebumin = $request->has('ebumin') ? $request->input('ebumin') : NULL;
-        $bier->ebumax = $request->has('ebumax') ? $request->input('ebumax') : NULL;
-        $bier->ebcmin = $request->has('ebcmin') ? $request->input('ebcmin') : NULL;
-        $bier->ebcmax = $request->has('ebcmax') ? $request->input('ebcmax') : NULL;
-        // $bier->image = ......TODO
+        $bier['code'] = $data['code'];
+        $bier['omschrijving'] = $data['omschrijving'];
+        $bier['toelichting'] = $data['toelichting'];
+        $bier['beercategory_id'] = $data['beercategory_id'] ? $data['beercategory_id'] : 0;
+        $bier['accijnstarif_id'] = $data['accijnstarif_id'] ? $data['accijnstarif_id'] : 0;
+        $bier['vastofseizoen'] = $data['vastofseizoen'] ? $data['vastofseizoen'] : 0;
+        $bier['fgmin'] = $data['fgmin'] ? $data['fgmin'] : 0;
+        $bier['fgmax'] = $data['fgmin'] ? $data['fgmax'] : 0;
+        $bier['ogmin'] = $data['ogmin'] ? $data['ogmin'] : 0;
+        $bier['ogmax'] = $data['ogmax'] ? $data['ogmax'] : 0;
+        $bier['alcvolmin'] = $data['alcvolmin'] ? $data['alcvolmin'] : 0;
+        $bier['alcvolmax'] = $data['alcvolmax'] ? $data['alcvolmax'] : 0;
+        $bier['ebumin'] = $data['ebumin'] ? $data['ebumin'] : 0;
+        $bier['ebumax'] = $data['ebumax'] ? $data['ebumax'] : 0;
+        $bier['ebcmin'] = $data['ebcmin'] ? $data['ebcmin'] : 0;
+        $bier['ebcmax'] = $data['ebcmax'] ? $data['ebcmax'] : 0;
 
         $bier->save();
 
         return Response::json($bier);
+
     }
 
     /**
@@ -251,16 +261,77 @@ class BierController extends Controller
      */
     public function destroy($bier_id)
     {
-        //Remove image file
+        
+        $group_id = Auth::user()->group->id;
+
         $bier = Beersort::find($bier_id);
         
+        //Remove image file        
         if($bier->image){
-            $filename = '/images/biersoorten/' . $bier->image;
-            Log::info('Deleting file '.$filename);
+            $filename = '/images/biersoorten/' . $group_id . '/' . $bier->image;
             Storage::delete($filename);
         }
 
         $bier = Beersort::destroy($bier_id);
+ 
         return Response::json($bier);
+
+    }
+
+    private function handleImageFile($nw_id){
+        
+        $group_id = Auth::user()->group->id;
+        $new_file_name = "";
+
+        //Save file (if any)
+        if(isset($_FILES["image"]["type"]))
+        {
+
+            $validextensions = array("jpeg", "jpg", "png", "bmp", "gif");
+            $temporary = explode(".", $_FILES["image"]["name"]);
+            $file_extension = end($temporary);
+            
+            if ((($_FILES["image"]["type"] == "image/png") || ($_FILES["image"]["type"] == "image/jpg") || ($_FILES["image"]["type"] == "image/jpeg")
+            ) && ($_FILES["image"]["size"] < 10000000) //Filesize max 10000kb/10Mb
+            && in_array($file_extension, $validextensions)) 
+            {
+                if ($_FILES["image"]["error"] > 0)
+                {
+                    // echo "Return Code: " . $_FILES["image"]["error"] . "<br/><br/>";
+                }
+                else
+                {
+                    //Move file
+                    $dir = public_path() . "/images/biersoorten/" . $group_id;
+
+                    $sourcePath = $_FILES['image']['tmp_name'];
+                    $targetPath = $dir . '/' . $nw_id . '.' . $file_extension;
+
+                    //Check if dir exists
+                    $result = File::makeDirectory($dir, 0775, true, true);
+
+                    move_uploaded_file($sourcePath, $targetPath);
+
+                    $new_file_name = $nw_id . '.' . $file_extension;
+
+                }
+            }
+            else
+            {
+                Log::info('Image filetype incorrect or size too big');
+                Log::info('File type incorrect or file too big...');
+            }
+        }
+        else
+        {
+            Log::info('File not set...');
+            $new_file_name = 'nologo.gif';
+        }
+
+        //Write filename to DB
+        $x = Beersort::find($nw_id);
+        $x->image = $new_file_name;
+        $x->save();
+
     }
 }

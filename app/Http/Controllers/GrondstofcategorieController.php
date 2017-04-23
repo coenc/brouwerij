@@ -5,6 +5,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Illuminate\Http\Request;
 use App\Grondstofcategorie;
+use App\Grondstof;
 use Validator;
 use Response;
 Use Log;
@@ -58,8 +59,6 @@ class GrondstofcategorieController extends Controller
         $userinput['group_id'] = $group_id;
         $biercat = Grondstofcategorie::create($userinput);
 
-
-        // return('Create new beercat with ID ' . $biercat->id);    
         return Response::json($biercat);
     }
 
@@ -72,6 +71,7 @@ class GrondstofcategorieController extends Controller
     public function show($id)
     {
         $grondstofcat = Grondstofcategorie::find($id);
+        
         return Response::json($grondstofcat);
     }
 
@@ -112,8 +112,15 @@ class GrondstofcategorieController extends Controller
      */
     public function destroy($id)
     {
-        //$biercat = Grondstofcategorie::find($id);
-        $grondstofcat = Grondstofcategorie::destroy($id);
+        
+        $grondstofcat = Grondstofcategorie::find($id);
+
+        //Delete grondstoffen for this grondstofcategorie
+        $grondstofcat->grondstoffen()->delete();
+
+        //Delete grondstofcategorie
+        $grondstofcat->delete();        
+
         return Response::json($grondstofcat);
     }
 }

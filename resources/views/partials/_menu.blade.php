@@ -8,19 +8,14 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/">BIS1.0<span class="pull-left hidden-xs showopacity glyphicon glyphicon-glass"></span></a>
+			<a class="navbar-brand" href="/">BIS<span class="pull-left hidden-xs showopacity glyphicon glyphicon-glass"></span></a>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 
-
-@if(Auth::check())
+			@if(Auth::check())
 				
-				<li class="{{Request::is('productie') ? 'active' : ''}}"><a href="/productie">Productie<span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-tint"></span></a></li>
-
-				<li class="{{Request::is('recepten') ? 'active' : ''}}"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
-
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Producten<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-star-empty"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
@@ -29,23 +24,27 @@
 					</ul>
 				</li>	
 
+				<li class="{{Request::is('recepten') ? 'active' : ''}}"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
+
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Grondstoffen<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-grain"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
-						<li class="{{Request::is('inkoopgrondstoffen') ? 'active' : ''}}"><a href="/inkoopgrondstoffen">Inkoop grondstoffen</a></li>
-						<li class="{{Request::is('verbruikgrondstoffen') ? 'active' : ''}}"><a href="/verbruikgrondstoffen">Verbruik grondstoffen</a></li>
-						<li class="divider"></li>
 						<li class="{{Request::is('grondstoffen') ? 'active' : ''}}"><a href="/grondstoffen">Grondstoffen</a></li>
 						<li class="{{Request::is('grondstofcategorieen') ? 'active' : ''}}"><a href="/grondstofcategorieen">Grondstof categorieën</a></li>
+						<li class="divider"></li>
+						<li class="{{Request::is('inkoopgrondstoffen') ? 'active' : ''}}"><a href="/inkoopgrondstoffen">Inkoop grondstoffen</a></li>
+						<li class="{{Request::is('verbruikgrondstoffen') ? 'active' : ''}}"><a href="/verbruikgrondstoffen">Verbruik grondstoffen</a></li>
 
 					</ul>
 				</li>				
+				
+				<li class="{{Request::is('productie') ? 'active' : ''}}"><a href="/productie">Productie<span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-tint"></span></a></li>
 				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Rapportages<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-stats"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
 						<li class="{{Request::is('rapportage/productie') ? 'active' : ''}}"><a href="/rapportage/productie">Productie</a></li>
-						<li class="{{Request::is('rapportage/inkoop') ? 'active' : ''}}"><a href="/rapportage/inkoop">Inkoop</a></li>
+						<li class="{{Request::is('rapportage/accijnsafdracht') ? 'active' : ''}}"><a href="/rapportage/accijnsafdracht">Accijnsafdracht</a></li>
 					</ul>
 				</li>
 
@@ -60,16 +59,15 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Gebruiker<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-user"></span></a>
 						
-						<ul class="dropdown-menu forAnimate" role="menu">
-							{{-- {!!(Auth::check()?'' : '<li><a href="/auth/login">Login</a></li>')!!} --}}
-							{!!(Auth::check()?'<li><a href="/auth/logout">Logout</a></li>' : '')!!}
-							{!!(Auth::check()?'<li ><a href="/mijnprofiel">Mijn profiel</a></li>' : '')!!}
-
-							{{-- {!!(Auth::check()?'' : '<li><a href="/auth/register">Registreren</a></li>')!!} --}}
-						</ul>
+					<ul class="dropdown-menu forAnimate" role="menu">
+						{!!(Auth::check()?'<li><a href="/auth/logout">Logout</a></li>' : '')!!}
+						{!!(Auth::check()?'<li ><a href="/mijnprofiel">Mijn profiel</a></li>' : '')!!}
+					</ul>
 				</li>
+			
+			@endif
 			</ul>
-@endif
+
 		</div>
 	</div>
 </nav>

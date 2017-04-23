@@ -1,7 +1,7 @@
 <!-- Flash messages -->
 <?php if(Session::has('success')): ?>
 	<div class="alert alert-success" role="alert">
-		<strong>Succes</strong> <?php echo e(Session::get('success')); ?>
+		<?php echo e(Session::get('success')); ?>
 
 	</div>
 <?php endif; ?>

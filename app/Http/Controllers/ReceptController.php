@@ -26,24 +26,24 @@ class ReceptController extends Controller
     public function index()
     {
         $group_id = Auth::user()->group->id;
-        // $recepten = Recept::where('group_id', $group_id)->get();
+        
         $recepten = Recept::all();
-        // $biersoorten = Beersort::where('group_id', $group_id)->get()->sortBy('omschrijving');
+        
         $bier_dropdown = DB::table('beersorts')
                         ->select(DB::raw('id, code, omschrijving'))
-                        ->where('group_id', $group_id)
+                        ->whereRaw('ISNULL (deleted_at)')
+                        ->where('group_id', '=' , $group_id)
                         ->get()
                         ->sortBy('omschrijving');
         
         //Build array for dropdown grondstoffen
-        $grondstoffen = Grondstof::all();
+        $grondstoffen = Grondstof::all()->sortBy('naam');
         $grndstf_dropdown = array();
         foreach ($grondstoffen as $grondstof) {
             $grndstf_dropdown[$grondstof->id] = $grondstof->naam; 
         }
         
-        return view('recepten.index')
-                                    ->with('bierdropdown', $bier_dropdown)
+        return view('recepten.index')->with('bierdropdown', $bier_dropdown)
                                     ->with('grondstofdropdown', $grndstf_dropdown)
                                     ->with('recepten', $recepten);
     }
@@ -98,7 +98,6 @@ class ReceptController extends Controller
 
         $receptregel = Recept::create($userinput);
 
-        // return('Create new beercat with ID ' . $biercat->id);    
         return Response::json($receptregel);
     }
 
@@ -139,8 +138,10 @@ class ReceptController extends Controller
         $userinput['hoeveelheid'] = $request->hoeveelheid;
         
         $recept = Recept::find($recept_id);
+        
         $recept->grondstof_id = $request->input('grondstof_id');
         $recept->hoeveelheid = $request->input('hoeveelheid');
+
         $recept->save();
 
         return Response::json($recept);
@@ -155,6 +156,7 @@ class ReceptController extends Controller
     public function destroy($receptregel_id)
     {
         $recept_regel = Recept::destroy($receptregel_id);
+        
         return Response::json($recept_regel);
     }
 }

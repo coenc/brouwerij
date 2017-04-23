@@ -2,14 +2,7 @@
 
 <?php $__env->startSection('css'); ?>
     
-        
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
-    <style type="text/css">
-/*        .addon{
-            position: relative;
-        }*/
-    </style>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -24,13 +17,13 @@
     </div><!-- div class row-->
 
     <div class = 'row'>
-        <div class="col-md-8 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1">
 
-            <table id="brouwtable" class=".table-responsive table-striped table-hover">
+            <table id="brouwtable" class="table table-responsive table-striped table-hover">
                 <thead>
                 <tr>
                     <th>Datum</th>
-                    <th class="text-right">Hoeveelheid</th>
+                    <th class="text-right">Aant</th>
                     <th>Product</th>
                     <th class="hidden-xs hidden-sm">Opmerking</th>
                     <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
@@ -56,13 +49,14 @@
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
+
         </div>
     </div><!-- div class row-->
 
 
 
     <!-- modal form for editing and adding -->
-    <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-md" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 
@@ -81,7 +75,7 @@
 
                         <input type="hidden" id="brouwsel_id" name="brouwsel_id" value="0">
                         
-                        <div class="col col-md-4">
+                        <div class="col col-md-3 col-xs-5">
                             <div class="form-group error">                            
                                 <?php echo e(Form::label('datum', 'Datum:', 'class="control-label"')); ?>
 
@@ -90,30 +84,31 @@
                             </div>
                         </div>
 
-                        <div class="col col-md-4">
-                        <div class="form-group">
-                            <?php echo e(Form::label('biersoort_id', 'Product:', 'class="control-label"')); ?> 
-                            <?php echo e(Form::select('biersoort_id', $beersrtn, null, ['class' => 'form-control', 'required' => ''])); ?>
+                        <div class="col col-md-3 col-xs-5">
+                            <div class="form-group">
+                                <?php echo e(Form::label('liters', 'Hoeveelheid:', 'class="control-label"')); ?>
 
-                        </div>
-                        </div>
+                                <?php echo e(Form::text('liters', null,  ["class" => 'form-control', 'required' => ''])); ?>
 
-                        <div class="col col-md-3">
-                        <div class="form-group">
-                            <?php echo e(Form::label('liters', 'Hoeveelheid:', 'class="control-label"')); ?>
-
-                            <?php echo e(Form::text('liters', null,  ["class" => 'form-control', 'required' => ''])); ?>
-
-                        </div>
+                            </div>
                         </div>
 
-                        <div class="col col-md-12">
-                        <div class="form-group">
-                            <?php echo e(Form::label('opmerking', 'Opmerking:', 'class="control-label"')); ?>
+                        <div class="col col-md-6 col-xs-10">
+                            <div class="form-group">
+                                <?php echo e(Form::label('biersoort_id', 'Product:', 'class="control-label"')); ?> 
+                                <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Alleen producten waarvan een recept beschikbaar is worden weergegeven in deze lijst"></span>
+                                <?php echo e(Form::select('biersoort_id', $beersrtn, null, ['class' => 'form-control', 'required' => ''])); ?>
 
-                            <?php echo e(Form::textarea('opmerking', null,  ["class" => 'form-control',  'rows'=>'4' ,'required' => ''])); ?>
-
+                            </div>
                         </div>
+
+                        <div class="col col-md-12 col-xs-10">
+                            <div class="form-group">
+                                <?php echo e(Form::label('opmerking', 'Opmerking:', 'class="control-label"')); ?>
+
+                                <?php echo e(Form::textarea('opmerking', null,  ["class" => 'form-control',  'rows'=>'4' ,'required' => ''])); ?>
+
+                            </div>
                         </div>
                     <?php echo Form::close(); ?>
 
@@ -122,8 +117,8 @@
                 
                 <div class="modal-footer">
                     <div class="col col-md-12">
-                    <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
 
@@ -143,13 +138,14 @@
 
         $(document).ready(function(){
 
+            $('[data-toggle="tooltip"]').tooltip(); 
+            
             //Datepicker init
             $('#datepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 language: 'nl',
                 weekStart: '1'
             });
-            // $('#datepicker').datepicker('update', Date());
 
             $('#newbrouwselerror').hide();
 
@@ -186,8 +182,6 @@
                 ],
             });
 
-
-            //AJAX init
             var url = "/productie";
 
             //Cancel button
@@ -212,7 +206,7 @@
                 }) 
             });
 
-            //create new biersoort / update existing biersoort
+            //Create new biersoort / update existing biersoort
             $("#btn-save").click(function (e) {
                 e.preventDefault();
 
@@ -223,7 +217,6 @@
                     liters: $('#liters').val(),
                     opmerking: $("#opmerking").val(),
                     biersoort_id: $('#biersoort_id').val(),
-                    // biersoort_id: $('#biersoort_id').prop("selectedIndex")+1 //zerobased selectbox index,
                 };
                 
                 //determine the http action [add=POST], [update=PUT]
@@ -246,7 +239,7 @@
                     success: function (data) {
 
                         if(data.message == 'ERROR'){
-                            $('#newbrouwselerror').html("<strong>WAARSCHUWING GRONDSTOFTEKORT:</strong><br><strong>Nieuwe productie NIET opgeslagen.</strong><br><br>Er is onvoldoende voorraad grondstoffen voor " + $('#liters').val() + ' ' + $("#biersoort_id :selected").text() + ".<br><br>Dit wordt veroorzaakt door een tekort aan de onderstaande grondstoffen:" + data.details);
+                            $('#newbrouwselerror').html("<strong>Waarschuwing grondstof tekort:</strong><br><strong>NIEUWE PRODUCTIE NIET OPGESLAGEN.</strong><br><br>Er is onvoldoende voorraad grondstoffen voor " + $('#liters').val() + ' ' + $("#biersoort_id :selected").text() + ".<br><br>Dit wordt veroorzaakt door een tekort aan de onderstaande grondstoffen:" + data.details);
                             $('#newbrouwselerror').show();
                         }
 
@@ -301,7 +294,7 @@
                 var brouwsel_id = $(this).val();
                 
                 swal({
-                  title: 'Brouwsel verwijderen?',
+                  title: 'Productie verwijderen?',
                   text: "Weet u het zeker? Deze aktie kan niet ongedaan worden gemaakt!",
                   type: 'warning',
                   showCancelButton: true,

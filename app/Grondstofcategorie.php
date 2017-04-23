@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Scopes\GrondstofcategoryScope;
 
 class Grondstofcategorie extends Model
 {
     protected $table = 'grondstofcategorie';
     protected $fillable = ['group_id', 'omschrijving'];
+    use SoftDeletes;
 
     protected static function boot()
     {
@@ -17,8 +19,10 @@ class Grondstofcategorie extends Model
         static::addGlobalScope(new GrondstofcategoryScope);
     }
 
-    public function beersorts(){
-		return $this->hasMany('App\Grondstof', 'grondstofcategory_id');
+    public function grondstoffen(){
+		return $this->hasMany('App\Grondstof', 'grondstofcategorie_id');
     }
+
+
 
 }

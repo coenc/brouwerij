@@ -23,7 +23,7 @@ class VoorraadController extends Controller
             ->join('recepten', 'beersorts.id', '=', 'recepten.biersoort_id')
             ->join('grondstoffen', 'grondstoffen.id', '=', 'recepten.grondstof_id')
             ->select('brouwsels.datum', 'brouwsels.liters', 'beersorts.omschrijving AS bier','grondstoffen.naam as grondstof',
-                    DB::raw('ROUND(recepten.hoeveelheid * brouwsels.liters, 3) AS hoeveelheidkg'))
+                    DB::raw('recepten.hoeveelheid * brouwsels.liters AS hoeveelheidkg'))
             ->where('brouwsels.group_id', $group_id)
             ->orderBy('datum', 'desc')
             ->get();

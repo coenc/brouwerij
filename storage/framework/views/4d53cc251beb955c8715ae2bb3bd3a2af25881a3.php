@@ -8,19 +8,14 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/">BIS1.0<span class="pull-left hidden-xs showopacity glyphicon glyphicon-glass"></span></a>
+			<a class="navbar-brand" href="/">BIS<span class="pull-left hidden-xs showopacity glyphicon glyphicon-glass"></span></a>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 
-
-<?php if(Auth::check()): ?>
+			<?php if(Auth::check()): ?>
 				
-				<li class="<?php echo e(Request::is('productie') ? 'active' : ''); ?>"><a href="/productie">Productie<span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-tint"></span></a></li>
-
-				<li class="<?php echo e(Request::is('recepten') ? 'active' : ''); ?>"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
-
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Producten<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-star-empty"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
@@ -29,23 +24,27 @@
 					</ul>
 				</li>	
 
+				<li class="<?php echo e(Request::is('recepten') ? 'active' : ''); ?>"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
+
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Grondstoffen<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-grain"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
-						<li class="<?php echo e(Request::is('inkoopgrondstoffen') ? 'active' : ''); ?>"><a href="/inkoopgrondstoffen">Inkoop grondstoffen</a></li>
-						<li class="<?php echo e(Request::is('verbruikgrondstoffen') ? 'active' : ''); ?>"><a href="/verbruikgrondstoffen">Verbruik grondstoffen</a></li>
-						<li class="divider"></li>
 						<li class="<?php echo e(Request::is('grondstoffen') ? 'active' : ''); ?>"><a href="/grondstoffen">Grondstoffen</a></li>
 						<li class="<?php echo e(Request::is('grondstofcategorieen') ? 'active' : ''); ?>"><a href="/grondstofcategorieen">Grondstof categorieën</a></li>
+						<li class="divider"></li>
+						<li class="<?php echo e(Request::is('inkoopgrondstoffen') ? 'active' : ''); ?>"><a href="/inkoopgrondstoffen">Inkoop grondstoffen</a></li>
+						<li class="<?php echo e(Request::is('verbruikgrondstoffen') ? 'active' : ''); ?>"><a href="/verbruikgrondstoffen">Verbruik grondstoffen</a></li>
 
 					</ul>
 				</li>				
+				
+				<li class="<?php echo e(Request::is('productie') ? 'active' : ''); ?>"><a href="/productie">Productie<span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-tint"></span></a></li>
 				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Rapportages<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-stats"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
 						<li class="<?php echo e(Request::is('rapportage/productie') ? 'active' : ''); ?>"><a href="/rapportage/productie">Productie</a></li>
-						<li class="<?php echo e(Request::is('rapportage/inkoop') ? 'active' : ''); ?>"><a href="/rapportage/inkoop">Inkoop</a></li>
+						<li class="<?php echo e(Request::is('rapportage/accijnsafdracht') ? 'active' : ''); ?>"><a href="/rapportage/accijnsafdracht">Accijnsafdracht</a></li>
 					</ul>
 				</li>
 
@@ -60,18 +59,17 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Gebruiker<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-user"></span></a>
 						
-						<ul class="dropdown-menu forAnimate" role="menu">
-							
-							<?php echo (Auth::check()?'<li><a href="/auth/logout">Logout</a></li>' : ''); ?>
+					<ul class="dropdown-menu forAnimate" role="menu">
+						<?php echo (Auth::check()?'<li><a href="/auth/logout">Logout</a></li>' : ''); ?>
 
-							<?php echo (Auth::check()?'<li ><a href="/mijnprofiel">Mijn profiel</a></li>' : ''); ?>
+						<?php echo (Auth::check()?'<li ><a href="/mijnprofiel">Mijn profiel</a></li>' : ''); ?>
 
-
-							
-						</ul>
+					</ul>
 				</li>
+			
+			<?php endif; ?>
 			</ul>
-<?php endif; ?>
+
 		</div>
 	</div>
 </nav>

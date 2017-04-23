@@ -11,30 +11,29 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<div class = 'row'>
-        <div class="col-md-9 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1">
 
             <table id="leveranciertable" class="table table-striped table-hover">
                 <thead>
                 <tr>
                     <th>Naam</th>
-                    {{-- <th>T.a.v.</th> --}}
                     <th>Adres</th>
                     <th>Postcode</th>
                     <th>Plaats</th>
-                    <th>E-mail</th>
+                    <th class="hidden-xs">E-mail</th>
                     <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
                  </tr>
                  </thead>
                  
                  <tbody id="leverancier_tablebody">
+
                     @foreach($leveranciers as $leverancier)
                         <tr id="leverancier{{$leverancier->id}}">
                             <td>{{ $leverancier->naam }}</td>
-                            {{-- <td>{{ $leverancier->factuurnaam }}</td> --}}
                             <td>{{ $leverancier->factuuradres }}</td>
                             <td>{{ $leverancier->factuurpostcode }}</td>
                             <td>{{ $leverancier->factuurplaats }}</td>
-                            <td><a href="mailto:{{ $leverancier->email }}">{{ $leverancier->email }}</a></td>
+                            <td class="hidden-xs"><a href="mailto:{{ $leverancier->email }}">{{ $leverancier->email }}</a></td>
                             <td class="text-right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
@@ -47,6 +46,7 @@
                             </td>
                         </tr> 
                     @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -60,7 +60,7 @@
             <div class="modal-content">
 
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>Leverancier opslaan</div>
                 </div>
 
@@ -85,25 +85,19 @@
                                         {{ Form::text('naam', null, ["class" => 'form-control', 'required' => '' ]) }}
                                     </div>
                                 </div>
-{{--                                 <div class="col col-md-12">
-                                    <div class="form-group">
-                                        {{ Form::label('factuurnaam', 't.a.v.:', 'class="control-label"') }}
-                                        {{ Form::text('factuurnaam', null,  ["class" => 'form-control', 'required' => '']) }}
-                                    </div>
-                                </div> --}}
                                 <div class="col col-md-12">
                                     <div class="form-group">
                                         {{ Form::label('factuuradres', 'Adres:', 'class="control-label"') }}
                                         {{ Form::text('factuuradres', null,  ["class" => 'form-control', 'required' => '']) }}
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                                <div class="col col-md-4">
                                     <div class="form-group">
                                         {{ Form::label('factuurpostcode', 'Postcode:', 'class="control-label"') }} 
                                         {{ Form::text('factuurpostcode', null, ['class' => 'form-control', 'required' => '']) }}
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                                <div class="col col-md-8">
                                     <div class="form-group">
                                         {{ Form::label('factuurplaats', 'Plaats:', 'class="control-label"') }} 
                                         {{ Form::text('factuurplaats', null, ['class' => 'form-control', 'required' => '']) }}
@@ -158,8 +152,6 @@
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
-
-                
             </div><!-- modal content -->
         </div><!-- modal dialog -->
     </div><!-- modal -->
@@ -263,8 +255,7 @@
                 // var form = document.forms.namedItem('uploadForm');
                 // var formdata = new FormData(form);                
                 // console.log(formdata);
-
-
+                
                 $('#ajaxloader').show();
 
                 var formData = {
@@ -305,9 +296,9 @@
                         levrow += '<td>' + data.factuuradres + '</td>'
                         levrow += '<td>' + data.factuurpostcode + '</td>'
                         levrow += '<td>' + data.factuurplaats + '</td>'
-                        levrow += '<td>' + data.email + '</td>'
+                        levrow += '<td class="hidden-xs"><a href="mailto:' + data.email + '">' + data.email + '</a></td>'
                         levrow += '<td class="text-right">';
-                        levrow += '<button class="btn btn-success btn-xs btn-delete delete-leverancier but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-envelope"></span>Brief</button>';
+                        levrow += '<a href="/brief?lev=' + data.id + '" class="btn btn-success btn-xs but-spacing"><span class="glyphicon glyphicon-envelope"></span>Brief</a>';
                         levrow += '<button class="btn btn-warning btn-xs btn-detail open-modal" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         levrow += '<button class="btn btn-danger btn-xs btn-delete delete-leverancier" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
                         levrow += '</td>';

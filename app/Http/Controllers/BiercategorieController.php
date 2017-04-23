@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Illuminate\Http\Request;
 use App\Beercategory;
 use Validator;
-// Use Illuminate\Contracts\Validation\Validator;
 use Response;
-Use Log;
+use Log;
 
 
 class BiercategorieController extends Controller
@@ -50,26 +50,28 @@ class BiercategorieController extends Controller
     public function store(Request $request)
     {
         
+        $group_id = Auth::user()->group->id;
+
         //Validate input
         $validator = Validator::make($request->all(), [
             'omschrijving' => 'required',
         ]);
+
         if ($validator->fails()) {
+            
             // return redirect('/productcategorieen')
             //             ->withErrors($validator)
             //             ->withInput();
-            return redirect()->back()->withErrors($validator);
+            
+            //return redirect()->back()->withErrors($validator);
         }
-
-        $group_id = Auth::user()->group->id;
-
+        
         $userinput = array();
         $userinput['omschrijving'] = $request->omschrijving;
         $userinput['group_id'] = $group_id;
 
         $biercat = Beercategory::create($userinput);
 
-        // return('Create new beercat with ID ' . $biercat->id);    
         return Response::json($biercat);
     }
 
@@ -105,15 +107,6 @@ class BiercategorieController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $data = $request->input();
-        log::info('Hier staat het');
-        log::info($request->input('omschrijving')); ///NIKS!!!!!
-        log::info('ALL:');
-        log::info($request->all());
-
-        $userinput = array();
-        $userinput['omschrijving'] = $request->omschrijving;
-        log::info($request->omschrijving); ///WEER NIKS????
 
         $biercat = Beercategory::find($id);
         $biercat->omschrijving = $request->input('omschrijving');
@@ -131,8 +124,21 @@ class BiercategorieController extends Controller
      */
     public function destroy($id)
     {
+
         $biercat = Beercategory::find($id);
+
+        // log::info('Te verwijderen recepten:');
+        // log::info(  json_encode($biercat->recepten() ) );
+        // foreach ($biercat->recepten as $rcpt) {
+        //     echo $rcpt->id;
+        // }
+
+        //Delete beersorts for this catgeory
+        $biercat->beersorts()->delete();
+        //Delete this beercategory
         $biercat = Beercategory::destroy($id);
+        
         return Response::json($biercat);
+
     }
 }

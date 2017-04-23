@@ -7,14 +7,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class = 'row'>
-        <div class="col-md-6 col-md-offset-1">
+        <div class="col-md-4 col-md-offset-1">
 
             <table class="table table-striped table-hover" id="grondstofcattable">
+                
                 <thead>
-                <tr>
-                    <th>Categorie</th>
-                    <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
-                </tr>
+                    <tr>
+                        <th>Categorie</th>
+                        <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
+                    </tr>
                 </thead>
                  
                 <tbody id="grondstofcatbody">
@@ -24,6 +25,7 @@
                             <td align="right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
+                                        <a href= '/grondstoffen/cat/{{ $grondstofcat->id }}' title="Toon grondstoffen uit categorie" class="btn btn-info btn-xs but-spacing" role="button"><span class="glyphicon glyphicon-list"></span></a>
                                         <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="{{$grondstofcat->id}}"><span class="glyphicon glyphicon-edit"></span>Bewerk</button> 
                                         <button class="btn btn-danger btn-xs btn-delete delete-grondstofcat but-spacing" value="{{$grondstofcat->id}}"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>
                                     </div>
@@ -43,7 +45,7 @@
             <div class="modal-content">
                 {!! Form::model($grondstofcats, ['data-parsley-validate' => '', 'id'=>'uploadForm', 'files' => true])  !!}
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>grondstofcategorie opslaan</div>
                 </div>
 
@@ -119,7 +121,7 @@
             });
 
             //create new biersoort / update existing grondstofcategorie
-            // $("#btn-save").click(function (e) {
+            
             $('#myModal').on('click','#btn-save', function(e){
                 
                 e.preventDefault();
@@ -128,7 +130,6 @@
 
                 // var form = document.forms.namedItem('uploadForm');
                 // var formdata = new FormData(form);
-                // console.log('');
 
                 var formData = {
                     omschrijving: $('#omschrijving').val(),
@@ -178,14 +179,14 @@
             });
 
 
-            //delete grondstofcategorie and remove from table
+            //Delete grondstofcategorie and remove from table
             $('#grondstofcattable').on('click','.delete-grondstofcat', function(){
 
                 var grondstofcat_id = $(this).val();
                 
                 swal({
                   title: 'Grondstofcategorie verwijderen?',
-                  text: "Weet u het zeker? Deze aktie kan niet ongedaan worden gemaakt!",
+                  html: "Deze aktie kan niet ongedaan worden gemaakt!<br />Grondstoffen uit deze categorie worden ook verwijderd<br/><br/>Weet u het zeker?",
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#d33',
@@ -233,17 +234,15 @@
                         targets: [ 0 ],
                         orderData: [ 0 ],
                         orderable: true
+                    },{
+                        targets: [ 1 ],
+                        orderData: [ 0 ],
+                        orderable: false
                     }
                 ],
             });
 
         });
-
-
-
-
-
-
 
     </script>
 

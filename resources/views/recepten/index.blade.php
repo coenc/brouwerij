@@ -11,8 +11,8 @@
 @section('content')
 
     <div class = 'row'>
-        <div class="row col-md-2 col-md-offset-1">
-            <div class="form-group">
+        <div class="row col-md-3 col-xs-7 col-md-offset-1">
+            <div class="form-group" >
                 <select id="mySelect" name="mySelect" class="form-control">
                     <option selected="selected" disabled>Selecteer product</option>
                         @foreach($bierdropdown as $bier)
@@ -47,7 +47,7 @@
             <div class="modal-content">
 
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>Ingrediënt opslaan</div>
                 </div>
 
@@ -66,11 +66,11 @@
                                 <input type="hidden" id="biersoort_id" name="biersoort_id" />
                             </div>
 
-                            <div class="form-group error col-md-6">
+                            <div class="form-group error col-md-4">
                                 {{ Form::label('hoeveelheid', 'Hoeveelheid:', 'class="control-label"') }}
                                 {{ Form::text('hoeveelheid', null, ["class" => 'form-control', 'required' => '' ]) }}
                             </div>
-                            <div class="form-group error col-md-6">
+                            <div class="form-group error col-md-8">
                                     {{ Form::label('grondstof_id', 'Grondstof:', 'class="control-label"') }} 
                                     {{ Form::select('grondstof_id', $grondstofdropdown, null, ['class' => 'form-control', 'required' => '', 'id' => 'grondstof_id']) }}
                             </div>                            
@@ -85,8 +85,6 @@
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
-
-                
             </div><!-- modal content -->
         </div><!-- modal dialog -->
     </div><!-- modal -->
@@ -154,8 +152,6 @@
         var biersoort_id = $(this).val();
         var biersoort_name = $("#mySelect :selected").text();
         var table_body;
-        
-        // alert(biersoort_id + ' - ' + biersoort_name);
 
         $.ajax({
             type: "GET",
@@ -181,10 +177,9 @@
                     table_body += "         </td>"
                     table_body += "     </tr>";
                 });
-                // table_body += "</tbody>";
-                // alert(table_body);
+                
                 $('#recept_body').html(table_body);
-                //alert(table_body);
+                
             },
             error: function(e) {
                 console.log(e.responseText);
@@ -211,7 +206,6 @@
                 $('#myModalLabel').text("Nieuw ingrediënt");
                 $('#btn-save').val('add');
                 $('#biersoort_id').val($("#mySelect :selected").val());
-                // $("#mySelect :selected").text();
                 $('#grondstof_id').val('');
                 $('#hoeveelheid').val('');
                 $('#myModal').modal('show');

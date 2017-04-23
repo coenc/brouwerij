@@ -14,16 +14,17 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <div class = 'row'>
+
         <div class="col-md-8 col-md-offset-1">
 
             <table id="biertabel" class="table table-striped table-hover">
-            
                 <thead>
                     <tr>
                         <th class="text-left"><?php echo e(Lang::get('custom.code')); ?></th>
-                        <th><?php echo e(Lang::get('custom.name')); ?></th>
-                        <th><?php echo e(Lang::get('custom.category')); ?></th>
-                        <th><?php echo e(Lang::get('custom.vastseizoen')); ?></th>
+                        <th class="text-left"><?php echo e(Lang::get('custom.name')); ?></th>
+                        <th class="hidden-sm hidden-xs"><?php echo e(Lang::get('custom.category')); ?></th>
+                        <th width="50px" class="text-center hidden-sm hidden-xs"><?php echo e(Lang::get('custom.vastseizoen')); ?></th>
+                        <th class="text-center">Afbeelding</th>
                         <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span><?php echo e(Lang::get('custom.new')); ?></button></th>
                      </tr>
                  </thead>
@@ -33,9 +34,19 @@
                         <tr id="biersoort<?php echo e($biersoort->id); ?>">
                             <td><?php echo e($biersoort->code); ?></td>
                             <td><?php echo e($biersoort->omschrijving); ?></td>
-                            <td><?php echo e(isset($biersoort->beercategory->omschrijving) ? $biersoort->beercategory->omschrijving : ''); ?></td>
-                            <td class="text-center"><?php echo e($biersoort->vastofseizoen); ?></td>
-                            
+                            <td class="hidden-sm hidden-xs"><?php echo e(isset($biersoort->beercategory->omschrijving) ? $biersoort->beercategory->omschrijving : ''); ?></td>
+                            <td class="text-center hidden-sm hidden-xs"><?php echo e($biersoort->vastofseizoen); ?></td>
+                            <td class="text-center hidden-sm hidden-xs">
+                                <?php if($biersoort->image): ?>
+                                <a class="fancybox" href="/images/biersoorten/<?php echo e(isset($group_id) ? $group_id : 'notfound.png'); ?>/<?php echo e(isset($biersoort->image) ? $biersoort->image : 'notfound.png'); ?>" id="fancyboximage">
+                                    
+                                    afbeelding
+                                </a>
+                                <?php else: ?>
+                                    --
+                                <?php endif; ?>
+
+                            </td>
                             <td class="text-right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
@@ -44,7 +55,7 @@
                                     </div>
                                 </div>
                             </td>
-                        </tr> 
+                        </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
@@ -58,7 +69,7 @@
             <div class="modal-content">
 
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>Bier opslaan</div>
                 </div>
 
@@ -80,7 +91,7 @@
                             <div class="form-group error col-md-3">
                                 <?php echo e(Form::label('code', 'Code:', 'class="control-label"')); ?>
 
-                                <?php echo e(Form::text('code', null, ["class" => 'form-control', 'required' => '', 'maxlength' => '3', ])); ?>
+                                <?php echo e(Form::text('code', null, ["class" => 'form-control', 'required' => '', 'maxlength' => '3', 'autofocus' => ''])); ?>
 
                             </div>
                             <div class="form-group col-md-9">
@@ -117,17 +128,14 @@
                             </div>
                         </div>
 
-                        <div id="beer_image" class="col col-md-3 col-xs-3 ">
+                        <div id="beer_image" class="col col-md-2 col-xs-3 ">
                             <div class= "well" id="logo_well">
-                                <a class="fancybox" href="/images/biersoorten/<?php echo e(isset($biersoort->image) ? $biersoort->image : 'notfound.png'); ?>" id="fancyboximage">
-                                    <img src="/images/biersoorten/<?php echo e(isset($biersoort->image) ? $biersoort->image : 'notfound.png'); ?>" id="imagepreview" width="100%" class="img-responsive">
-                                </a>
+                                <a class="fancybox"  id="fancyboximage"><img src="" id="imagepreview" width="100%" class="img-responsive"/></a>
                             </div>
                             <div>
                                 <input type='file' name='image' id='image' onchange="readURL(this);" />
                                 <div style="font-size: 11px"><?php echo e(Lang::get('custom.maximum')); ?> <?php echo e($maxfilesize); ?>b</div>
-                            </div>                            
-                            
+                            </div>
                         </div>
 
                     </div>
@@ -141,29 +149,28 @@
                         <div id="beerdetails" style="display:none;">
                             
                             <div class="col col-md-12">
-                                <div class="form-group error col-md-3 col-sm-3">
-                                    
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('alcvolmin', 'Alcvol min:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Minimaal alcohol volume"></span>
                                     <?php echo e(Form::text('alcvolmin', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('alcvolmax', 'Alcvol max:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Maximaal alcohol volume"></span>
                                     <?php echo e(Form::text('alcvolmax', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ogmin', '°P/OG min:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Graden Plato is het aantal grammen extract per 100 gram wort. Ook wel OG genoemd"></span>
                                     <?php echo e(Form::text('ogmin', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ogmax', '°P/OG max:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Graden Plato is het aantal grammen extract per 100 gram wort. Ook wel OG genoemd"></span>
@@ -173,48 +180,48 @@
                             </div>
 
                             <div class="col col-md-12">
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ebumin', 'EBU min:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Minimale bitterheidsgraad van het bier"></span>
                                     <?php echo e(Form::text('ebumin', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ebumax', 'EBU max:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Maximale bitterheidsgraad van het bier"></span>
                                     <?php echo e(Form::text('ebumax', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ebcmin', 'EBC min:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="De kleurcode van het bier"></span>
                                     <?php echo e(Form::text('ebcmin', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('ebcmax', 'EBC max:', ["class" => 'control-label'])); ?>
 
                                     <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="De kleurcode van het bier"></span>
                                     <?php echo e(Form::text('ebcmax', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                            </div>                                    
-
+                            </div>
+                            
                             <div class="col col-md-12">
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('fgmin', 'FG min:', ["class" => 'control-label'])); ?>
 
-                                    <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Hoera hoera!!!"></span>
+                                    <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="FG min"></span>
                                     <?php echo e(Form::text('fgmin', null, ["class" => 'form-control'])); ?>
 
                                 </div>
-                                <div class="form-group error col-md-3 col-sm-3">
+                                <div class="form-group error col-md-2 col-sm-2 col-xs-6">
                                     <?php echo e(Form::label('fgmax', 'FG max:', ["class" => 'control-label'])); ?>
 
-                                    <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="Hoera hoera!!!"></span>
+                                    <span class="glyphicon glyphicon glyphicon-question-sign tooltip-questionmark" data-toggle="tooltip" title="FG max"></span>
                                     <?php echo e(Form::text('fgmax', null, ["class" => 'form-control'])); ?>
 
                                 </div>
@@ -277,10 +284,9 @@
                 $('#beercategory_id').val(data.beercategory_id);
                 $('#accijnstarif_id').val(data.accijnstarif_id);
                 $('#vastofseizoen').val(data.vastofseizoen);
-                if(data.image===null){data.image = 'notfound.png'};
-                // $('#image').val('');
-                $("#imagepreview").attr("src", "/images/biersoorten/" + data.image);
-                $("#fancyboximage").attr("href", "/images/biersoorten/" + data.image);
+                if(data.image===null || data.image===""){data.image = 'notfound.png'};
+                $("#imagepreview").attr("src", "/images/biersoorten/" + data.group_id + '/' + data.image);
+                $(".fancybox").attr("href", "/images/biersoorten/" + data.group_id + '/'+ data.image);
                 $('#fgmin').val(data.fgmin);
                 $('#fgmax').val(data.fgmax);
                 $('#ogmin').val(data.ogmin);
@@ -305,7 +311,7 @@
             
             swal({
               title: '<?php echo e(Lang::get('custom.delete_product')); ?>',
-              text: "<?php echo e(Lang::get('custom.areyousure')); ?> <?php echo e(Lang::get('custom.not_undone')); ?>",
+              html: "<?php echo e(Lang::get('custom.not_undone')); ?><br /><br /><?php echo e(Lang::get('custom.areyousure')); ?>",
               type: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#d33',
@@ -328,6 +334,7 @@
                 });
             })
             .catch(swal.noop)
+
         });
         
         //display modal form for creating new biersoort
@@ -342,75 +349,25 @@
             $('#vastofseizoen').val("");
             $("#imagepreview").attr("src", "");
             $("#fancyboximage").attr("href", "");
-            // $("#imagepreview").attr("src", "/images/biersoorten/notfound.png"); GEEFT FOUTJE BIJ NIEUWE INVOER !!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $("image").val = '';
             $('#myModal').modal('show');
         });        
         
-        //////////////////////////////////////////////////////////////////////////////////////////////////
-        //  
-        //  https://abandon.ie/notebook/simple-file-uploads-using-jquery-ajax
-        //
-        //////////////////////////////////////////////////////////////////////////////////////////////////
         
-        // Variable to store your files
-        var files;
-
-        // Add events
-        $('input[type=file]').on('change', prepareUpload);
-
-        // Grab the files and set them to our variable
-        function prepareUpload(event)
-        {
-          files = event.target.files;
-        }
-
         //create new biersoort / update existing biersoort
-        // $("#btn-save").click(function (e) {
         $(document).on('click','#btn-save', function(e){
             
-            // var form = document.forms.namedItem('uploadForm');
+            e.preventDefault();
+
+            $('#ajaxloader').show();
+
+            var form = document.forms.namedItem('uploadForm');
             // var form = $('form')[0];
-            // var formdata = new FormData(form);
-            // for (var [key, value] of formdata.entries()) { 
-            //   console.log(key, value);
-            // }
-            
-            // var filepath = $('input[type=file]').val();
-            // var filename = $('input[type=file]').val().replace(/.*(\/|\\)/, '');
-            // console.log('Filepath = ' + filepath);
-            // console.log('Filename = ' + filename);
+            var formdata = new FormData(form);
+            for (var [key, value] of formdata.entries()) { 
+              console.log(key, value);
+            }
 
-            // var fileUpload    = $("#image").get(0); 
-            // var files         =  fileUpload.files; 
-            // var mediafilename = ""; 
-            // for (var i = 0; i < files.length; i++) { 
-            //   mediafilename = files[i].name; 
-            // } 
-            // console.log('Mediailename = ' + mediafilename);
-
-            var formData = {
-                code: $('#code').val(),
-                accijnstarif_id: $('#accijnstarif_id').val(),
-                omschrijving: $('#omschrijving').val(),
-                toelichting: $('#toelichting').val(),
-                beercategory_id: $('#beercategory_id').val(),
-                accijnstarif_id: $('#accijnstarif_id').val(),
-                vastofseizoen: $('#vastofseizoen').val(),
-                image: $('image').val(),
-                fgmin: $('#fgmin').val(),
-                fgmax: $('#fgmax').val(),
-                ogmin: $('#ogmin').val(),
-                ogmax: $('#ogmax').val(),
-                alcvolmin: $('#alcvolmin').val(),
-                alcvolmax: $('#alcvolmax').val(),
-                ebumin: $('#ebumin').val(),
-                ebumax: $('#ebumax').val(),
-                ebcmin: $('#ebcmin').val(),
-                ebcmax: $('#ebcmax').val(),
-            };
-            
-            // console.info(formData);
-            
             // Determine the http action [add=POST], [update=PUT]
             var state = $('#btn-save').val();
             var biersoort_id = $('#biersoort_id').val();
@@ -418,6 +375,7 @@
             var type = "POST"; //for creating new resource
             if (state == "update"){
                 type = "PUT"; //for updating existing resource
+                // formdata.append("updateaction", "1")
                 my_url = my_url + '/' + biersoort_id;
             }
 
@@ -425,16 +383,20 @@
                 type: type,
                 url: my_url,
                 headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' },
-                cache: false,
-                data: formData,
-                dataType: 'json',
+                data: formdata,
+                contentType: false,       // The content type used when sending data to the server.
+                cache: false,             // To unable request pages to be cached
+                processData: false,        // To send DOMDocument or non processed data file it is set to false
                 success: function (data) {
 
                     var bierrow = '<tr id=biersoort' + data.id + '">';
                     bierrow += '<td>' + data.code + '</td>';
                     bierrow += '<td>' + data.omschrijving + '</td>';
-                    bierrow += '<td>' + $('#beercategory_id').find('option:selected').text() + '</td>'
-                    bierrow += '<td class="text-center">' + $('#vastofseizoen').val() + '</td>'
+                    bierrow += '<td class="hidden-sm hidden-xs">' + $('#beercategory_id').find('option:selected').text() + '</td>'
+                    bierrow += '<td class="text-center hidden-sm hidden-xs">' + $('#vastofseizoen').val() + '</td>'
+
+                    bierrow += '<td class="text-center hidden-sm hidden-xs"><a class="fancybox" href="/images/biersoorten/' + data.group_id + '/' + data.image + '" id="fancyboximage">afbeelding</a></td>';
+
                     bierrow += '<td class="text-right">';
                     bierrow += '<div class="input-group">';
                     bierrow += '<div class="input-group-btn">';
@@ -446,20 +408,16 @@
                     bierrow += '</tr>';
                     
                     if (state == "add"){ 
-                        //user added a new record
+                        //user added a new record, add table row
                         $('#biersoortbody').prepend(bierrow);
-
-                        //Copy file: make second AJAX call for the image
-                        copy_form_image(my_url);
-
-                    }else{
-                        //user updated an existing record
+                    }else{ 
+                        //user updated an existing record, update table row
                         document.getElementById('biersoort' + data.id).innerHTML = bierrow;
                     }
 
                 },
                 error: function (data) {
-                    console.log('Error in POST/PUT (biersoort):', data);
+                    console.log('Error in postPOST/PUT (biersoort):', data);
                 }
             });
 
@@ -468,63 +426,25 @@
 
         });
 
-        function copy_form_image(url){
-            // e.stopPropagation(); // Stop stuff happening
-            // e.preventDefault();
-                        
-            $('#ajaxloader').show();
-
-            // Create a formdata object and add the files
-            var data = new FormData();
-            $.each(files, function(key, value)
-            {
-                data.append(key, value);
-            });
-            
-            $.ajax({
-                url: url + '?files',
-                type: 'POST',
-                data: data,
-                headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' },
-                cache: false,
-                dataType: 'json',
-                processData: false, // Don't process the files
-                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                success: function(data, textStatus, jqXHR){
-                    if(typeof data.error === 'undefined'){
-                        // Success
-                        // submitForm(event, data);
-                    }else{
-                        // Handle errors here
-                        console.log('ERRORS: ' + data.error);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    // Handle errors here
-                    console.log('ERRORS: ' + textStatus);
-                    $('#ajaxloader').hide();
-                }
-            });
-        }
-
 
         function readURL(input) {
             if (input.files && input.files[0]) {
+                $('#ajaxloader').show();
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var new_img = e.target.result;
                     $('#imagepreview').attr('src', new_img);
-                    $("#fancyboximage").prop("href", new_img);
+                    $(".fancybox").prop("href", new_img);
                 };
                 reader.readAsDataURL(input.files[0]);
+                $('#ajaxloader').hide();
             }
-            // $('#fancyboximage').attr('href', e.target.result);
         }
 
 
         $(document).ready(function(){
 
-            $('[data-toggle="tooltip"]').tooltip(); 
+            $('[data-toggle="tooltip"]').tooltip();
 
             $(".fancybox").fancybox({
                 closeBtn    : 'true',
@@ -569,6 +489,9 @@
                         orderable: true
                     }, {
                         targets: [ 4 ],
+                        orderable: false
+                    }, {
+                        targets: [ 5 ],
                         orderable: false
                     }
                 ],

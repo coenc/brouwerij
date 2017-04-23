@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Illuminate\Http\Request;
 use App\Group;
+use Validator;
+use Response;
+use Session;
+use Image;
 
 class ProfielController extends Controller
 {
@@ -45,7 +50,42 @@ class ProfielController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        
+
+        //Validate input
+        $validator = Validator::make($request->all(), [
+            'groupname' => 'required',
+        ]);
+
+        $group_id = Auth::user()->group->id;
+        
+        $groep = Group::find($group_id);
+        $groep->groupname = $request->groupname;
+        $groep->adres = $request->adres;
+        $groep->postcode = $request->postcode;
+        $groep->woonplaats = $request->woonplaats;
+        $groep->email = $request->email;
+
+        if ($request->hasFile('image')){
+            $file = $request->file('image');
+            $filename = $group_id . '.' . $file->getClientOriginalExtension();
+            $filepath = 'images/logos/' . $filename;
+            //Resize and watermark uploaded image, keep aspect ratio
+            Image::make($file)->resize(300, null, function ($constraint) 
+                                {$constraint->aspectRatio();})
+                                ->insert('images/logos/watermark.gif', 'bottom-right', 5, 5)
+                                ->save($filepath);
+            
+            $groep->logo = $filename;
+            
+        }
+
+        if($groep->save()){
+            Session::flash('success', 'Profiel opgeslagen:');
+        }
+
+        return redirect('/mijnprofiel');
     }
 
     /**

@@ -67,7 +67,7 @@ class RegisterController extends Controller
 
         $new_group = new Group;
         $new_group->groupname = 'Nieuwe gebruiker';
-        $new_group->logo = 'nologo.gif';
+        $new_group->logo = 'bislogo.png';
         $new_group->save();
 
         $new_group_id = $new_group->id;
@@ -76,6 +76,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'username' => $data['username'],
             'woonplaats' => $data['woonplaats'],
             'password' => bcrypt($data['password']),
             'group_id' => $new_group_id,

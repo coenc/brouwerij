@@ -113,7 +113,7 @@ class InkoopController extends Controller
         $inkoop->datum = $request->datum;
         $inkoop->grondstof_id = $request->grondstof_id;
         $inkoop->hoeveelheidkg = $request->hoeveelheidkg;
-        $inkoop->prijsexbtw = round($request->prijsexbtw, 3);
+        $inkoop->prijsexbtw = $request->prijsexbtw;
         
         $inkoop->save();
 

@@ -11,17 +11,16 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <div class = 'row'>
-        <div class="col-md-9 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1">
 
             <table class="table table-striped table-hover" id="inkooptabel">
                 <thead>
                 <tr>
                     <th>Datum</th>
                     <th>Grondstof</th>
-                    <th class="text-right">Hoeveelheid (kg)</th>
                     <th class="text-right">Prijs (&euro;/kg)</th>
-                    <th class="text-left" colspan = "2">Verbruikt (kg)</th>
-                    
+                    <th class="text-right">Verbruikt (kg)</th>
+                    <th></th>
                     <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
                     
                  </tr>
@@ -29,23 +28,20 @@
                  
                  <tbody id="grondstofsoortbody">
                     <?php $__currentLoopData = $inkoopgrondstoffen; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $inkoopgrondstof): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <tr id="inkoop<?php echo e($inkoopgrondstof->id); ?>" title="grondstof id <?php echo e($inkoopgrondstof->grondstof->id); ?>-<?php echo e($inkoopgrondstof->grondstof->naam); ?>">
-                            <td><?php echo e($inkoopgrondstof->datum); ?></td>
+                        <tr id="inkoop<?php echo e($inkoopgrondstof->id); ?>" title="grondstof <?php echo e($inkoopgrondstof->grondstof->naam); ?>">
+                            <td data-order="<?php echo e(strtotime($inkoopgrondstof->datum)); ?>"><?php echo e(date('d-m-Y', strtotime($inkoopgrondstof->datum))); ?></td>
                             <td ><?php echo e($inkoopgrondstof->grondstof->naam); ?></td>
-                            <td class="text-right"><?php echo e($inkoopgrondstof->hoeveelheidkg); ?></td>
-                            <td class="text-right">&euro;<?php echo e($inkoopgrondstof->prijsexbtw); ?></td>
-                            <td class="text-right">
-                                <div><?php echo e($inkoopgrondstof->verbruiktkg); ?></div>
-                            </td>
+                            <td class="text-right">&euro;<?php echo e(number_format($inkoopgrondstof->prijsexbtw, 2, ',', '.')); ?></td>
+                            <td data-order="<?php echo e($inkoopgrondstof->verbruiktkg); ?>" class="text-right"><?php echo e(number_format($inkoopgrondstof->verbruiktkg, 0, ',', '.')); ?>/<?php echo e(number_format($inkoopgrondstof->hoeveelheidkg, 0, ',', '.')); ?></td>
                             <td width = "66px">
-                                <div id='verbruiktotaal' title="Totaal ingekocht <?php echo e($inkoopgrondstof->hoeveelheidkg); ?> kg" style="position:absolute; width:55px;height:10px;margin-top:5px;background-color: green;"></div>
-                                <div id='verbruik' title="Verbruikt <?php echo e($inkoopgrondstof->verbruiktkg); ?> kg" style="position:absolute; width: <?php echo e((55 - ($inkoopgrondstof->hoeveelheidkg - $inkoopgrondstof->verbruiktkg) / $inkoopgrondstof->hoeveelheidkg * 55)); ?>px;height: 10px;margin-top:5px;background-color: red;"></div>
+                                <div id='verbruiktotaal' title="Totaal ingekocht <?php echo e(number_format($inkoopgrondstof->hoeveelheidkg, 3, ',', '.')); ?> kg" style="position:absolute; width:55px;height:10px;margin-top:5px;background-color: green;"></div>
+                                <div id='verbruik' title="Verbruikt <?php echo e(number_format($inkoopgrondstof->verbruiktkg, 3, ',', '.')); ?> kg" style="position:absolute; width: <?php echo e((55 - ($inkoopgrondstof->hoeveelheidkg - $inkoopgrondstof->verbruiktkg) / $inkoopgrondstof->hoeveelheidkg * 55)); ?>px;height: 10px;margin-top:5px;background-color: red;"></div>
                             </td>
                             <td align="right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
-                                        <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="<?php echo e($inkoopgrondstof->id); ?>"><span class="glyphicon glyphicon-edit"></span>Bewerk</button> 
-                                        <button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="<?php echo e($inkoopgrondstof->id); ?>"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>
+                                        <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="<?php echo e($inkoopgrondstof->id); ?>"><span class="glyphicon glyphicon-edit"></span><div class="buttontext">Bewerk</div></button> 
+                                        <button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="<?php echo e($inkoopgrondstof->id); ?>"><span class="glyphicon glyphicon-remove"></span><div class="buttontext">Verwijder</div></button>
                                     </div>
                                 </div>
                             </td>
@@ -64,7 +60,7 @@
             <div class="modal-content">
 
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>Inkoop opslaan</div>
                 </div>
 
@@ -85,12 +81,12 @@
                         </div>
 
                         <div class="col col-md-6">
-                        <div class="form-group error">
-                            <?php echo e(Form::label('datum', 'Datum:', 'class="control-label"')); ?>
+                            <div class="form-group error">
+                                <?php echo e(Form::label('datum', 'Datum:', 'class="control-label"')); ?>
 
-                            <?php echo e(Form::text('datum', null, ["id" => "datepicker", "class" => 'form-control', 'required' => '', 'maxlength' => '3', ])); ?>
+                                <?php echo e(Form::text('datum', null, ["id" => "datepicker", "class" => 'form-control', 'required' => '', 'maxlength' => '3', ])); ?>
 
-                        </div>
+                            </div>
                         </div>
 
                         <div class="col col-md-6">
@@ -127,7 +123,7 @@
                 <div class="modal-footer">
                     <div class="col col-md-12">
                         <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="btn-save" value="add">Save</button>
+                        <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
 
@@ -227,7 +223,6 @@
             });
 
             //create new biersoort / update existing biersoort
-            // $("#btn-save").click(function (e) {
             $('#myModal').on('click','#btn-save', function(e){
                 
                 e.preventDefault();
@@ -268,13 +263,14 @@
                         var inkooprow = '<tr biersoortid="' + data.id + '">';
                         inkooprow += '<td>' + data.datum + '</td>';
                         inkooprow += '<td>' + $('#grondstof_id').find('option:selected').text() + '</td>'
-                        inkooprow += '<td class="text-right">' + data.hoeveelheidkg + '</td>';
+                        // inkooprow += '<td class="text-right">' + data.hoeveelheidkg + '</td>';
                         inkooprow += '<td class="text-right">&euro;' + data.prijsexbtw + '</td>';
-                        inkooprow += '<td class="text-right">0</td>';
+                        inkooprow += '<td data-order="" class="text-right">0/' + data.hoeveelheidkg + '</td>';
                         inkooprow += '<td class="text-right"><div style="position:absolute; width:44px;height:10px;margin-top:5px;background-color: green;"></div></td>';
+
                         inkooprow += '<td class="text-right">';
                         inkooprow += '<button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
-                        inkooprow += '<button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Delete</button>';
+                        inkooprow += '<button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
                         inkooprow += '</td>';
                         inkooprow += '</tr>';
 
@@ -299,7 +295,49 @@
 
     </script>
 
-    
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $('#inkooptabel').DataTable({
+                "responsive": true,
+                // "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "Alle"]],
+                // "pageLength": -1, //Default All
+                "bPaginate": false,
+                "searching": true,
+                "info":     false,
+                "processing": true,
+                "order": [[ 0, 'desc' ]],
+                "language": {
+                    "url": "/js/datatables_lang/datatables_lang_dut.json"
+                },
+                columnDefs: [ 
+                    {
+                        targets: [ 0 ],
+                        orderData: [ 0, 2 ],
+                        orderable: true
+                    }, {
+                        targets: [ 1 ],
+                        orderData: [ 1, 0 ],
+                        orderable: true
+                    }, {
+                        targets: [ 2 ],
+                        orderable: true
+                    }, {
+                        targets: [ 3 ],
+                        orderable: true
+                    }, {
+                        targets: [ 4 ],
+                        orderable: false
+                    }, {
+                        targets: [ 5 ],
+                        orderable: false
+                    }
+                ],
+            });
+
+        });
+
+    </script>
 
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

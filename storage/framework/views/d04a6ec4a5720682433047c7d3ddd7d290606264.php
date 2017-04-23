@@ -8,7 +8,7 @@
 
 <?php $__env->startSection('content'); ?>
 
-<?php $__env->startSection('title', 'Home'); ?>
+<?php $__env->startSection('title', 'BIS'); ?>
 
 <div class="container">
 
@@ -16,42 +16,53 @@
         <div class="col-md-6 col-md-offset-1">
             <div class="panel panel-primary">
                 
-                <div class="panel-heading"><h4>Brouwerij Informatie Systeem v.<?php echo e($appversion); ?></h4></div>
-                
-                <div class="panel-body">
-                    <div class="col-md-6" style="margin-bottom: 30px"> 
-                        <div class="row">Laravel Framework v.<?php echo App::Version(); ?></div>
-                        <div class="row">PHP v.<?php echo e($phpversion); ?></div>
-                        <div class="row">(c) 2017 Coen Coppoolse</div>
-                        <div class="row"><a href='mailto: <?php echo e($email); ?>'><?php echo e($email); ?></a></div>
-                    </div>
-
-                    <div class="col-md-12"> 
-                        <button id="about_button" type="button" class="btn btn-primary btn-block">About this webapplication</button>
-                    </div>
-
-
+                <div class="panel-heading text-center">
+                    <h4>Brouwerij Informatie Systeem <?php echo e($appversion); ?></h4>
                 </div>
 
-                <hr>
-                
-                <div id="loginstatus" class="row text-center">
-                    U bent <?php echo (Auth::check() ? 'ingelogd. <a href="/auth/logout" id="logoutlink">Logout</a>' : 'uitgelogd. <a href="#" id="loginlink">Login</a>'); ?>
-
-                </div>
-                <div class="row">
+                <div class="row" style="margin-top:20px">
                     <?php if(Auth::check()): ?>
-                        <div class="col-md-5 col-xs-6 col-sm-4" id="logo_row"> 
+                        <div class="col-md-6 col-xs-6 col-sm-4" id="logo_row"> 
                             <div class="well" id="logo_well">
-                                <div class="text-center"><sup><?php echo e($groupname); ?></sup></div>
-                                <img id="group_logo" class="img-responsive" src="/images/<?php echo e($grouplogo); ?>"/>
+                                <div class="text-center">
+                                    <sup><?php echo e($groupname); ?></sup>
+                                </div>
+                                <img id="group_logo" class="img-responsive" src="/images/logos/<?php echo e($grouplogo); ?>"/>
                             </div>
-
                         </div>
+                    <?php else: ?>
+                        <div class="col-md-8 col-xs-6 col-sm-4" id="logo_row"> 
+                            <div class="well" id="logo_well">
+                                <div class="text-center">
+                                    <sup>BIS</sup>
+                                </div>
+                                <img id="group_logo" class="img-responsive" src="/images/logos/bislogo.png"/>
+                            </div>
+                        </div>
+
                     <?php endif; ?>
+
                 </div>
 
-                <hr>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1" style="margin-bottom: 10px">
+                        <?php if(!Auth::check()): ?>                       
+                            <div class="text-center">U bent uitgelogd</div>
+                            <div>
+                                <a href="#" class="btn btn-primary btn-block" role="button" id="loginlink">LOGIN</a>
+                            </div>
+                        <?php else: ?>
+                            <div  class="text-center">
+                                <div>U bent ingelogd</div>
+                                <a href="/auth/logout" class="btn btn-primary btn-block" role="button" id="logoutlink">LOGOUT</a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-right"> 
+                    <a id="about_button" type="button">About this web application</a>
+                </div>
 
             </div>
         </div>
@@ -77,9 +88,10 @@
 
                             <div class="form-group<?php echo e($errors->has('email') ? ' has-error' : ''); ?>">
                                 <label for="email" class="col-md-4 control-label">E-mail adres</label>
-
+                               
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="<?php echo e(old('email')); ?>" required autofocus>
+                                    
+                                    <input id="email" type="email" class="form-control" name="email" value="guest@bis.nl" required autofocus>
 
                                     <?php if($errors->has('email')): ?>
                                         <span class="help-block">
@@ -93,7 +105,7 @@
                                 <label for="password" class="col-md-4 control-label">Wachtwoord</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required>
+                                    <input id="password" type="password" class="form-control" name="password" value="qazwsx" required>
 
                                     <?php if($errors->has('password')): ?>
                                         <span class="help-block">
@@ -135,11 +147,11 @@
                         </div>
                     </div><!-- modal footer -->
                 </form>
+
             </div>
         </div>
     </div> <!-- end modal loginform -->
     <?php endif; ?>
-
 
 
     <!-- modal form About -->
@@ -149,7 +161,7 @@
                 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h3 class="modal-title" id="myModalLabel">About this webapplication</h3>
+                    <h3 class="modal-title" id="myModalLabel">About this web application</h3>
                 </div><!-- modal header -->
 
                 <div class="modal-body">
@@ -175,10 +187,9 @@
 
 <?php $__env->stopSection(); ?>
 
-
 <?php $__env->startSection('scripts'); ?>
 
-    <script type="text/javascript">
+    <script>
 
         $("#loginlink").click(function (e) {
             $('#modalLogin').modal('show');
@@ -188,32 +199,17 @@
             $('#modalAbout').modal('show');
         });
 
-        // $("#closeAbout").click(function (e) {
-        //     $('#modalAbout').modal('hide');
-        // });
-
-        
         $(document).ready(function(){
+
+            var jquery_version = jQuery().jquery;
+            
+            $('#jquery_version').html('jQuery v.' + jquery_version);
+
+            $('#screen').html('Screen size ' + screen.width + 'x' + screen.height);
 
             $('#modalLogin').modal('show');
             
-            //$("#toongebruikers").click(function(){
-            $(document).on('click', '#toongebruikers', function() {
-                
-                if($("#toongebruikers").val = 1){
-                    $("#gebruikers").show();
-                    $("#toongebruikers").val(0);
-                    $("#toongebruikers").html('Verberg gebruikers');
-                }
-                if($("#toongebruikers").val = 0){
-                    $("#gebruikers").hide();
-                    $("#toongebruikers").val(1);
-                    $("#toongebruikers").html('Toon gebruikers');                    
-                }
-            });
-
         });
-
 
     </script>
 

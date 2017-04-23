@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use App\Brouwsel;
 use App\Inkoopgrondstof;
 use App\Beersort;
-Use App\Grondstof;
-Use App\Recept;
+use App\Grondstof;
+use App\Recept;
 use Response;
-Use Log;
-use Illuminate\Support\Facades\DB;
+use Log;
+use DB;
 
 class BrouwselController extends Controller
 {
@@ -30,10 +30,16 @@ class BrouwselController extends Controller
     {
         $group_id = Auth::user()->group->id;
 
-        // $brouwsels = Brouwsel::where('group_id', $group_id)->orderBy('datum','desc')->get();
         $brouwsels = Brouwsel::all();
         $beersorts = Beersort::all();
+        $beersorts = DB::table('beersorts')
+                        ->join('recepten', 'beersorts.id', '=', 'recepten.biersoort_id')
+                         ->select('beersorts.*')
+                         ->where('beersorts.group_id', '=', $group_id)
+                         ->whereRaw('ISNULL (beersorts.deleted_at)')
+                         ->get();
        
+
         //Build array for dropdown biersoort 
         $beersrtn = array();
         foreach ($beersorts as $beersort) {
@@ -69,13 +75,10 @@ class BrouwselController extends Controller
         $warninggrondstoffen = array();
         $biersrt = $request->biersoort_id;
         $ltrs = $request->liters;
-        // echo ('Biersoort=' . $biersrt);
-        // echo ('Liters=' . $ltrs);
-        // echo ('<br>');
-        Log::info('Te brouwen biersoort: ' . $biersrt  );
-        Log::info('Te brouwen aant liters: ' . $ltrs  );
 
         $ingr = Recept::where('biersoort_id', $biersrt)->get();
+
+        DB::beginTransaction();
         foreach ($ingr as $key => $value) {
 
             $grondstof = $value->grondstof_id;
@@ -83,12 +86,8 @@ class BrouwselController extends Controller
             
             $grondstofnaam = Grondstof::select('naam')->where('id', $grondstof)->first();
             
-            Log::info('investigating availability grondstof ' . $grondstofnaam->id . '-' . $grondstofnaam->naam . " Aantal kg: " . $aantalkilo);
-            Log::info('---------------------');
             $avail = $this->verbruik($grondstof, $aantalkilo);
-            Log::info('----------------------------------------------------------');
-            Log::info('availability: ' . print_r($avail, 1));
-
+            
             if( $avail['code'] <> 200 ){
                 $warning = true;
                 $warninggrondstoffen[] = '<br>Tekort aan grondstof ' . $grondstofnaam->naam . ' (' . $aantalkilo . ' kg)';
@@ -96,20 +95,24 @@ class BrouwselController extends Controller
         }
 
         if ($warning){
-            //echo('Waarschuwing voor grondstof(fen) tekort:' . print_r($warninggrondstoffen, 1));
-            Log::info('Warning issued, no db insert');
+            
+            Log::info('Warning issued, rollback transaction');
+            DB::rollBack();
+            
             return Response::json(array('message' => 'ERROR',
                                         'code' => 6666,
                                         'details' => $warninggrondstoffen
                                         )
                                     );
         }else{
-            // echo('Geen waarschuwingen bij invoeren brouwsel');
-            Log::info('No warning issued, doing db insert');
+            
+            Log::info('No warning issued, commit transaction');
             $group_id = Auth::user()->group->id;
             $request['group_id'] = $group_id;
 
             $brouwsel = Brouwsel::create($request->all());
+            DB::commit();
+
             return Response::json($brouwsel);
         }
     }
@@ -174,8 +177,6 @@ class BrouwselController extends Controller
                 
         $grstf_naam = Grondstof::select('naam')->where('id', $grondstof)->first()->naam;
 
-        Log::info('Verbruikfunctie: id=' . $grondstof . '-' . $grstf_naam . '. Aantal kg: ' . $aantkg);
-
         $totaal_beschikbaar = DB::select(DB::raw('
                                             SELECT SUM(hoeveelheidkg - verbruiktkg) AS totaalbeschikbaar
                                             FROM inkoopgrondstof 
@@ -183,7 +184,7 @@ class BrouwselController extends Controller
                                         '), array('grondstof' => $grondstof)
                                     );
 
-        //Log::info(print_r($totaal_beschikbaar,1));
+        
         $beschikbare_kg_grondstof = $totaal_beschikbaar[0]->totaalbeschikbaar;
         Log::info('Totaal beschikbare kg grondstof ' . $grstf_naam . ' = kg ' . $beschikbare_kg_grondstof);
 
@@ -199,7 +200,7 @@ class BrouwselController extends Controller
                                                 FROM inkoopgrondstof 
                                                 WHERE grondstof_id = :grondstof
                                                 AND (hoeveelheidkg - verbruiktkg) > 0 '), 
-                                            array('grondstof' => $grondstof)
+                                        array('grondstof' => $grondstof) //for prepared statement
                                         );
             
             foreach($beschikbaar as $key => $value){
@@ -219,7 +220,7 @@ class BrouwselController extends Controller
                     break 1; //Exit foreach 1 level
 
                 }elseif(($value->hoeveelheidkg - $value->verbruiktkg) < $te_vinden_kg){
-                    //NIET genoeg, schrijf BESCHIKBARE hoeveelheid af en zoek door
+                    //NIET voldoende grondstof in deze inkoop, schrijf BESCHIKBARE hoeveelheid af en zoek door
 
                     $update = Inkoopgrondstof::find($value->id);
                     
@@ -233,19 +234,17 @@ class BrouwselController extends Controller
                     if ($gevonden >= $aantkg){
                         break 1;
                     }
-
                 }
             }
 
-            Log::info('Grondstof in zijn totaal beschikbaar: ' . $grondstof . ' (' . $aantkg . ' kg)');            
+            Log::info('Grondstof geheel beschikbaar: ' . $grondstof . ' (' . $aantkg . ' kg)');            
             //Registreer verbruik in tabel Inkoopgrondstof
             $response = array();
             $response['code'] = 200;
             $response['grondstof_id'] = $grondstof;
             $response['omschr'] = '*' . $aantkg . ' kilo van grondstof '  . $grstf_naam  . ' is beschikbaar';
 
-            return($response);
-                
+            return($response);  
 
         }else{
             //Er is ONVOLDOENDE aanwezig van deze huidige grondstof
@@ -260,7 +259,6 @@ class BrouwselController extends Controller
             return($response);
 
         }
-
 
     }
 

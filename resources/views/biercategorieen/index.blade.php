@@ -6,26 +6,23 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
-@if (count($errors) > 0)
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-@endif
-
-
+    @if (count($errors) > 0)
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+    @endif
 
     <div class = 'row'>
-        <div class="col-md-6 col-md-offset-1">
+        <div class="col-md-4 col-md-offset-1">
 
             <table id="biercattabel" class="table table-striped table-hover">
                 <thead>
-                <tr>
-                    <th>Omschrijving</th>
-                    <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
-                 </tr>
+                    <tr>
+                        <th>Omschrijving</th>
+                        <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
+                     </tr>
                  </thead>
                  
                  <tbody id="biercatbody">
@@ -35,6 +32,7 @@
                             <td align="right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
+                                        <a href= '/producten/cat/{{ $biercat->id }}' title="Toon producten uit categorie" class="btn btn-info btn-xs but-spacing" role="button"><span class="glyphicon glyphicon-list"></span></a>
                                         <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="{{$biercat->id}}"><span class="glyphicon glyphicon-edit"></span>Bewerk</button> 
                                         <button class="btn btn-danger btn-xs btn-delete delete-biercat but-spacing" value="{{$biercat->id}}"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>
                                     </div>
@@ -43,6 +41,7 @@
                         </tr> 
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>
@@ -53,7 +52,7 @@
             <div class="modal-content">
                 
                 <div id="ajaxloader">
-                    <div id="spinnerimage"><img src= 'images/ajax-loader.gif'></div>
+                    <div id="spinnerimage"><img src= '/images/ajax-loader.gif'></div>
                     <div class="text-center">Biercategorie opslaan</div>
                 </div>
 
@@ -82,7 +81,7 @@
                 <div class="modal-footer">
                     <div class="col col-md-12">
                         <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="btn-save" value="add">Save</button>
+                        <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
             </div><!-- modal content -->
@@ -204,8 +203,7 @@
                             $('#biercatbody').prepend(biercatrow);
                         }else{ 
                             // user updated an existing record
-                            // $("#biercat" + data.id).replaceWith(biercatrow);
-                            document.getElementById('biercat' + data.id).innerHTML = bierrow;
+                            document.getElementById('biercat' + data.id).innerHTML = biercatrow;
                         }
 
                     },
@@ -226,8 +224,8 @@
                 var biercat_id = $(this).val();
                 
                 swal({
-                  title: 'Biercategorie verwijderen?',
-                  text: "Weet u het zeker? Deze aktie kan niet ongedaan worden gemaakt!",
+                  title: 'Productcategorie verwijderen?',
+                  html: "Deze aktie kan niet ongedaan worden gemaakt!<br/>Producten uit deze categorie worden ook verwijderd.<br/><br/>Weet u het zeker?",
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#d33',

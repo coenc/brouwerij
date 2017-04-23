@@ -19,17 +19,26 @@ Route::get('auth/register', 'Auth\RegisterController@showRegistrationForm');
 Route::post('auth/register', 'Auth\RegisterController@create');
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 Route::get('auth/woonplaatsen', 'WoonplaatsController@getWoonplaatsen');
-//All-in-one routes??? (new Auth)
+
 Auth::routes();
 
 // Application routes
+
 Route::resource('producten', 'BierController');
+Route::get('producten/cat/{productcatid}', 'BierController@index');
+
 Route::resource('bier', 'BierController');
+// Route::post('bier_image_save', 'BierController@storeBeerImage');
+
 Route::resource('productie', 'BrouwselController');
-Route::resource('brouwen', 'BrouwselController');
+// Route::resource('brouwen', 'BrouwselController');
+
 Route::resource('productcategorieen', 'BiercategorieController');
 Route::resource('biercategorie', 'BiercategorieController');
+
+Route::get('grondstoffen/cat/{grondstofcatid}', 'GrondstofController@index');
 Route::resource('grondstoffen', 'GrondstofController');
+
 Route::resource('grondstof', 'GrondstofController');
 
 Route::resource('grondstofcategorieen', 'GrondstofcategorieController');
@@ -52,5 +61,5 @@ Route::resource('mijnprofiel', 'ProfielController');
 
 //Rapportages
 Route::get('rapportage/productie', 'RapportageController@productie');
-Route::get('rapportage/inkoop', 'RapportageController@inkoop');
 Route::get('rapportagedata', 'RapportageController@servedata');
+Route::get('rapportage/accijnsafdracht', 'RapportageController@accijnsAfdracht');

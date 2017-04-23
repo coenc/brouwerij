@@ -23,14 +23,16 @@ class GrondstofController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $grondstofcat = NULL)
     {
-        $grondstoffen = Grondstof::all()->sortBy('grondstofcategorie_id');
-        $grondstoffencategories = Grondstofcategorie::all()->sortBy('omschrijving');
+        
+        if(isset($grondstofcat)){
+            $grondstoffen = Grondstof::ofCategory($grondstofcat)->get()->sortBy('naam');
+        }else{
+            $grondstoffen = Grondstof::all()->sortBy('naam');
+        }
 
-        // echo(print_r($grondstoffen, 1));
-        // echo(print_r($grondstoffencategories, 1));
-        // die;
+        $grondstoffencategories = Grondstofcategorie::all()->sortBy('omschrijving');
 
         //Build array for dropdown biersoort 
         $grondstofcat_dropdown = array();
@@ -73,16 +75,7 @@ class GrondstofController extends Controller
         $userinput['naam'] = $request->naam;
         $userinput['grondstofcategorie_id'] = $request->grondstofcategorie_id;
 
-        Log::info('<*userinput*');
-        Log::info(print_r($userinput, 1));
-        Log::info('***>');
-
-        // $grondstof = Grondstof::create($request->all()); //Hier gaat het fout!!!!!!!!!!!!!!!!! Waardes worden niet ge-insert!!!!!!!!!!!!!!        
-        $grondstof = Grondstof::create($userinput); //TODO : Hier gaat het fout!!!!!!!!!!!!!!!!! Waardes worden niet ge-insert!!!!!!!!!!!!!!
-
-        Log::info('<+result+');
-        Log::info($grondstof);
-        Log::info('+++>');
+        $grondstof = Grondstof::create($userinput);
 
         return Response::json($grondstof);
     }
@@ -96,6 +89,7 @@ class GrondstofController extends Controller
     public function show($id)
     {
         $grondstof = Grondstof::find($id);
+        
         return Response::json($grondstof);
     }
 

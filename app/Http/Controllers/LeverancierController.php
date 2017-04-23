@@ -9,6 +9,7 @@ use App\Group;
 use Illuminate\Support\Facades\DB;
 use Response;
 use Log;
+use Carbon\Carbon;
 
 class LeverancierController extends Controller
 {
@@ -121,11 +122,7 @@ class LeverancierController extends Controller
         $leverancier->bankrekening = $request->bankrekening;
         $leverancier->banknaam = $request->banknaam;
         
-        Log::info('BEFORE SAVE');
-        Log::info(print_r($leverancier,1));
         $leverancier->save();
-        Log::info('AFTER SAVE');
-        Log::info(print_r($leverancier,1));
 
         return Response::json($leverancier);
     }
@@ -145,23 +142,15 @@ class LeverancierController extends Controller
     public function brief(Request $request)
     {
 
-        // var_dump($request->all());
         $group_id = Auth::user()->group->id;
 
         $group = Group::find($group_id);
         
         $leverancier = Leverancier::find($request['lev']);
 
-        // $bedrijfsgegevens = DB::table('config')
-        //             ->select(DB::raw('bedrijfsnaam, bedrijfsadres, bedrijfswoonplaats, bedrijfspostcode', 'bedrijfsemail', 'bedrijfswebsite'))
-        //             ->get()
-        //             ->sortBy('bedrijfsnaam');
-
-
-        // var_dump($leverancier);
         return view('leveranciers.brief')->with('leverancier', $leverancier)
                                          ->with('group', $group);
-                                         // ->with('bedrijfsgegevens', $bedrijfsgegevens);
+
     }
     
 }

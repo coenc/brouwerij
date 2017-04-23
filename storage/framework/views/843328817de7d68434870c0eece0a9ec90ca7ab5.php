@@ -5,26 +5,27 @@
 <?php $__env->startSection('css'); ?>
 <style>
 	@media  print {
-	  .page-header * {
-	    visibility: hidden;
-	  }
-	  navbar * {
-	    visibility: hidden;
-	  }
-	  #printbutton{
-	  	visibility: hidden;	
-	  }
-	  #section-to-print, #section-to-print * {
-	    visibility: visible;
-	  }
-	  #section-to-print {
-	    position: absolute;
-	    left: 0;
-	    top: 0;
-	  }
+	  	.page-header * {
+		    visibility: hidden;
+		}
+		navbar * {
+			visibility: hidden;
+		}
+		#printbutton{
+			visibility: hidden;	
+		}
+		#section-to-print, #section-to-print * {
+			visibility: visible;
+		}
+		#section-to-print {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
 	}
 </style>
 <?php $__env->stopSection(); ?>
+
 
 <?php $__env->startSection('content'); ?>
 
@@ -38,36 +39,29 @@
 				<?php echo e(isset($leverancier->factuurplaats) ? $leverancier->factuurplaats : ''); ?><br>
 				<br>
 				<br>
-				Amsterdam, <?php echo e(date("d MM Y")); ?><br>
+				Amsterdam, <?php echo e(date("j F Y")); ?><br>
 				<br>
 				Geachte heer, mevrouw <?php echo e($leverancier->factuurnaam); ?>,<br>
 				<br>
-				<br>
-				<br>
-				<br>
-
-				<br>
-				<br>
+				<div id="printtext"></div>
+				<textarea id="mytextarea" cols="120" rows="16" style="border:none;"></textarea>
 				<br>
 				<br>
 				Met vriendelijke groeten,<br>
 				<br>
 				<br>
 					<?php echo e(isset($group->groupname) ? $group->groupname : ''); ?><br>
-					<?php echo e(isset($group->adres) ? $group->adres : ''); ?> <?php echo e(isset($group->postcode) ? $group->postcode : ''); ?><br>
-					<?php echo e(isset($group->woonplaats) ? $group->woonplaats : ''); ?> 				
+					<?php echo e(isset($group->adres) ? $group->adres : ''); ?><br>
+					<?php echo e(isset($group->postcode) ? $group->postcode : ''); ?> <?php echo e(isset($group->woonplaats) ? $group->woonplaats : ''); ?> 				
 			</div>
 		</div>
 	</div>
+
 	<div class="col-md-12 ">
 		<div class="col col-md-12 col-md-offset-1 align-left" id="printbutton" style="margin-top:20px">
 			<input type="button" onclick="printDiv('printableArea')" value="Afdrukken" />
 		</div>
-
 	</div>
-
-
-
 
 <?php $__env->stopSection(); ?>
 
@@ -75,6 +69,7 @@
 
 	<script type="text/javascript">
 		function printDiv(divName) {
+			// $('#printtext').val($('#mytextarea').value); 
 			var printContents = document.getElementById(divName).innerHTML;
 			var originalContents = document.body.innerHTML;
 			document.body.innerHTML = printContents;
@@ -82,7 +77,16 @@
  			document.body.innerHTML = originalContents;
 	 	};
      </script>
-}
+
+	<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+	<script>
+	    tinymce.init({
+	        selector: 'mytextarea',
+	        plugins: 'link code',
+	        menubar: true
+	    })
+	</script>
 
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

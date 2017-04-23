@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 use App\Brouwsel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -14,82 +16,95 @@ class RapportageController extends Controller
         $this->middleware('auth');
     }
 
-    public function productie(){
+    public function accijnsAfdracht(){
 
-        $xas = array();
-        $arraywithvalues = array();
+        $group_id = Auth::user()->group->id;
 
-        $biersoorten = DB::table('beersorts')->select('id', 'omschrijving AS name')->get();
+        $data = DB::table('brouwsels')
+            ->join('beersorts', 'brouwsels.biersoort_id', '=', 'beersorts.id')
+            ->join('accijnstarifs', 'accijnstarifs.id', '=', 'beersorts.accijnstarif_id')
+            ->select('datum', 'liters', 'omschrijving', 'tariefperhl', DB::raw('ROUND(tariefperhl*liters/1000,2) AS afdracht'))
+            ->where('brouwsels.group_id', $group_id)
+            ->orderBy('datum', 'desc')
+            ->get();
 
-        foreach ($biersoorten as $biersoort) {
-            
-            $values = array();
-            
-            //Build values array for biersoort
-            $liters = DB::table('brouwsels')->where('biersoort_id', '=', $biersoort->id)->select('liters', 'datum')->get();
-            foreach ($liters as $liter) {
-                $values[] = $liter->liters;
-            }
-            if(count($values) == 0){
-                $values[] = 0;
-            }
+        $total = DB::table('brouwsels')
+            ->join('beersorts', 'brouwsels.biersoort_id', '=', 'beersorts.id')
+            ->join('accijnstarifs', 'accijnstarifs.id', '=', 'beersorts.accijnstarif_id')
+            ->select(DB::raw('SUM(ROUND(tariefperhl*liters/1000,2)) AS total'))
+            ->where('brouwsels.group_id', $group_id)
+            ->get();
 
-            $myData[] = array(
-                        'name' => $biersoort->name,
-                        'data' => $values
-                        );
-
-            $xas[] = $biersoort->name;
-
-            unset($values);
-
-        }      
-
-        echo('<pre>');
-        echo(print_r($xas, 1));
-        echo(print_r($myData, 1));
-        echo('</pre>');
-
-        return view('rapportages.rapportageproductie')
-                ->with('xas', $xas)
-                ->with('myData', $myData);
-            
-    }    
-
-
-    public function servedata(){
-
-        $biersoorten = DB::table('beersorts')->select('id', 'omschrijving AS name')->get();
-
-
-        foreach ($biersoorten as $biersoort) {
-        
-            $xas[] = $biersoort->name;    
-            $values = array();
-            
-            //Build values array for biersoort
-            $liters = DB::table('brouwsels')->where('biersoort_id', '=', $biersoort->id)->select('liters', 'datum')->get();
-            foreach ($liters as $liter) {
-                $values[] = $liter->liters;
-            }
-            if(count($values) == 0){
-                $values[] = 0;
-            }
-
-            
-            $myData['series'][] = array(
-                        'name' => $biersoort->name,
-                        'data' => $values
-                        );
-
-            unset($values);
-
-        }
-
-        $myData['categories'] = $xas;
-
-        return Response::json($myData);
+        // dd($total);
+        return view('rapportages.accijnsafdracht')->with('data', $data)
+                                                  ->with('total', $total);
 
     }
+
+    public function productie(){
+
+        $group_id = Auth::user()->group->id;
+
+        $xas = array();
+        $data = array();
+
+        $datums = DB::table('brouwsels')
+                    ->select('datum')
+                    ->where('group_id','=', $group_id)
+                    ->whereRaw('ISNULL (deleted_at)')
+                    ->groupby('datum')
+                    ->orderBy('datum', 'ASC')
+                    ->get();
+
+        foreach ($datums as $datum) {
+            
+            $xas[] = $datum->datum;
+
+            $bieren = DB::table('beersorts')
+                                ->select('id', 'omschrijving' )
+                                ->where('group_id','=', $group_id)
+                                ->whereRaw('ISNULL (deleted_at)')
+                                ->orderBy('id', 'ASC')
+                                ->get();
+
+            $values = array();
+            foreach ($bieren as $bier) {
+
+                $brouwdata = DB::table('brouwsels')
+                            ->select(DB::raw('biersoort_id, datum, liters'))
+                            ->where([['brouwsels.group_id', '=', $group_id], ['biersoort_id', '=', $bier->id], ['datum', '=', $datum->datum]])
+                            ->whereRaw('ISNULL (deleted_at)')
+                            ->orderBy('datum', 'ASC')
+                            ->orderBy('biersoort_id', 'ASC')
+                            ->get();
+                
+                $liters = 0;
+
+                foreach ($brouwdata as $brdat) {
+                    $liters = $liters + (int)$brdat->liters;
+                }
+
+                $values[] = $liters;
+
+            }
+
+            $data[] = array('name' => $bier->omschrijving, 'data' => $values);
+            unset( $values);
+            
+        }
+
+
+        // echo('<pre>');
+        // echo(json_encode($xas));
+        // echo('<br>');
+        // echo(json_encode($data));
+        // echo('</pre>');
+
+
+        return view('rapportages.rapportageproductie')
+                ->with('xas', json_encode($xas))
+                ->with('myData', json_encode($data));
+        
+    }    
 
 }

@@ -1,4 +1,4 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> --}}
 <script src="/js/bootstrap.min.js"></script>
@@ -13,3 +13,24 @@
 <script type="text/javascript" src="/js/jquery.fancybox-media.js"></script>
 -->
 <script src="/js/js.cookie.js"></script><!-- https://github.com/js-cookie/js-cookie  -->
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+        // Cookie melding
+        var cookie_message = '<div class="alert alert-warning text-center" role="alert" ><strong>Cookie melding</strong><br/>Deze webapplicatie maakt GEEN gebruik van tracking cookies.<div><button class="btn btn-warning btn-xs but-spacing" id="close_cookie">OK, Ik snap het</button></div></div>';
+        
+        if (Cookies.get('bis') != 'cookieaccept'){
+        	//cookie is NOT set
+            $('#cookie_alert').append(cookie_message);
+        }
+        
+        $(document).on('click', '#close_cookie', function() {
+            Cookies.set('bis', 'cookieaccept', {expires: 365});
+            $('#cookie_alert').hide('slow');
+        });
+
+	});
+    
+</script>

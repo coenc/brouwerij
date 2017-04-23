@@ -9,30 +9,29 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
 	<div class = 'row'>
-        <div class="col-md-9 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1">
 
             <table id="leveranciertable" class="table table-striped table-hover">
                 <thead>
                 <tr>
                     <th>Naam</th>
-                    
                     <th>Adres</th>
                     <th>Postcode</th>
                     <th>Plaats</th>
-                    <th>E-mail</th>
+                    <th class="hidden-xs">E-mail</th>
                     <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw</button></th>
                  </tr>
                  </thead>
                  
                  <tbody id="leverancier_tablebody">
+
                     <?php $__currentLoopData = $leveranciers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leverancier): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr id="leverancier<?php echo e($leverancier->id); ?>">
                             <td><?php echo e($leverancier->naam); ?></td>
-                            
                             <td><?php echo e($leverancier->factuuradres); ?></td>
                             <td><?php echo e($leverancier->factuurpostcode); ?></td>
                             <td><?php echo e($leverancier->factuurplaats); ?></td>
-                            <td><a href="mailto:<?php echo e($leverancier->email); ?>"><?php echo e($leverancier->email); ?></a></td>
+                            <td class="hidden-xs"><a href="mailto:<?php echo e($leverancier->email); ?>"><?php echo e($leverancier->email); ?></a></td>
                             <td class="text-right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
@@ -45,6 +44,7 @@
                             </td>
                         </tr> 
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
                 </tbody>
             </table>
         </div>
@@ -85,7 +85,6 @@
 
                                     </div>
                                 </div>
-
                                 <div class="col col-md-12">
                                     <div class="form-group">
                                         <?php echo e(Form::label('factuuradres', 'Adres:', 'class="control-label"')); ?>
@@ -94,14 +93,14 @@
 
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                                <div class="col col-md-4">
                                     <div class="form-group">
                                         <?php echo e(Form::label('factuurpostcode', 'Postcode:', 'class="control-label"')); ?> 
                                         <?php echo e(Form::text('factuurpostcode', null, ['class' => 'form-control', 'required' => ''])); ?>
 
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                                <div class="col col-md-8">
                                     <div class="form-group">
                                         <?php echo e(Form::label('factuurplaats', 'Plaats:', 'class="control-label"')); ?> 
                                         <?php echo e(Form::text('factuurplaats', null, ['class' => 'form-control', 'required' => ''])); ?>
@@ -168,8 +167,6 @@
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
-
-                
             </div><!-- modal content -->
         </div><!-- modal dialog -->
     </div><!-- modal -->
@@ -273,8 +270,7 @@
                 // var form = document.forms.namedItem('uploadForm');
                 // var formdata = new FormData(form);                
                 // console.log(formdata);
-
-
+                
                 $('#ajaxloader').show();
 
                 var formData = {
@@ -315,9 +311,9 @@
                         levrow += '<td>' + data.factuuradres + '</td>'
                         levrow += '<td>' + data.factuurpostcode + '</td>'
                         levrow += '<td>' + data.factuurplaats + '</td>'
-                        levrow += '<td>' + data.email + '</td>'
+                        levrow += '<td class="hidden-xs"><a href="mailto:' + data.email + '">' + data.email + '</a></td>'
                         levrow += '<td class="text-right">';
-                        levrow += '<button class="btn btn-success btn-xs btn-delete delete-leverancier but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-envelope"></span>Brief</button>';
+                        levrow += '<a href="/brief?lev=' + data.id + '" class="btn btn-success btn-xs but-spacing"><span class="glyphicon glyphicon-envelope"></span>Brief</a>';
                         levrow += '<button class="btn btn-warning btn-xs btn-detail open-modal" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         levrow += '<button class="btn btn-danger btn-xs btn-delete delete-leverancier" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
                         levrow += '</td>';

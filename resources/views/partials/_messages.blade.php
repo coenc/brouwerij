@@ -1,7 +1,7 @@
 <!-- Flash messages -->
 @if(Session::has('success'))
 	<div class="alert alert-success" role="alert">
-		<strong>Succes</strong> {{Session::get('success')}}
+		{{Session::get('success')}}
 	</div>
 @endif
 

@@ -2,6 +2,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    <script src="/js/jquery.min.js"></script>
+    
     <!--Bootstrap-->
     {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> --}}
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
@@ -20,6 +22,10 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     
     <style>
+
+        #about_button{
+            cursor: pointer;
+        }
         #group_logo{
             /*centreer image*/
             display: block;
@@ -43,11 +49,13 @@
         .but-spacing > .glyphicon{
             margin-right:4px;
         }
+        .but-spacing > .buttontext{
+            display: inline !important;
+        }
         .tooltip-questionmark{
             opacity: 0.250;
             font-size: 12px;
         }
-
         #ajaxloader{
             display: none;
             position:relative;
@@ -79,6 +87,12 @@
         }
         #beer_image{
             margin-top:40px;
+        }
+        .alert{
+            margin:0;
+        }
+        .container{
+            padding:0;
         }
     </style>
     

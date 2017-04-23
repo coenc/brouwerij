@@ -5,7 +5,6 @@ namespace App\Scopes;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 
@@ -24,4 +23,5 @@ class BeersortScope implements Scope
 
         $builder->where('group_id', '=', $group_id);
     }
+
 }

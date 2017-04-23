@@ -7,12 +7,12 @@
 <?php $__env->startSection('content'); ?>
 
 	    <div class = 'row'>
-        <div class="col-md-7 col-md-offset-1">
+        <div class="col-md-8 col-md-offset-1">
 
             <table id="verbruikstable" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>Datum</th>
+                    <th>Productiedatum</th>
                     <th>Brouwsel</th>
                     <th>Grondstof</th>
                     <th class="text-right">Hoeveelheid (kg)</th>
@@ -24,7 +24,7 @@
                             <td data-order="strtotime(<?php echo e($voorraadgrondstof->datum); ?>)"><?php echo e(date('d-m-Y', strtotime($voorraadgrondstof->datum))); ?></td>
                             <td><?php echo e($voorraadgrondstof->liters); ?> x <?php echo e($voorraadgrondstof->bier); ?></td>
                             <td><?php echo e($voorraadgrondstof->grondstof); ?></td>
-                            <td class="text-right"><?php echo e($voorraadgrondstof->hoeveelheidkg); ?></td>
+                            <td class="text-right"><?php echo e(number_format($voorraadgrondstof->hoeveelheidkg, 1, ',', '.')); ?></td>
                         </tr> 
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
@@ -54,7 +54,7 @@
                 columnDefs: [ 
                     {
                         targets: [ 0 ],
-                        orderData: [ 0, 2 ],
+                        orderData: [ 0, 1 ],
                         orderable: true
                     }, {
                         targets: [ 1 ],

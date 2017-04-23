@@ -19,56 +19,60 @@
             
             <?php echo Form::model($group, ['files' => true, 'data-parsley-validate' => '', 'id'=>'uploadForm']); ?> 
 
-            <div class="col-md-5">    
-                    
-                    <div class="form-group error col-md-12">
-                        <?php echo e(Form::label('groupnaam', 'Naam:', 'class="control-label"')); ?>
+                <div class="col-md-5">
+                        
+                        <div class="form-group error col-md-12">
+                            <?php echo e(Form::label('groupnaam', 'Naam', 'class="control-label"')); ?>
 
-                        <?php echo e(Form::text('groupname', null, ["class" => 'form-control', 'required' => '', 'maxlength' => '300', ])); ?>
+                            <?php echo e(Form::text('groupname', null, ["class" => 'form-control', 'required' => '', 'maxlength' => '100', ])); ?>
 
-                    </div>
-                    <div class="form-group col-md-12">
-                        <?php echo e(Form::label('adres', 'Adres:', 'class="control-label"')); ?>
-
-                        <?php echo e(Form::text('adres', null,  ["class" => 'form-control', 'required' => ''])); ?>
-
-                    </div>
-                    <div class="form-group col-md-12">
-                        <?php echo e(Form::label('woonplaats', 'Woonplaats:', 'class="control-label"')); ?>
-
-                        <?php echo e(Form::text('woonplaats', null,  ["class" => 'form-control', 'rows'=> '5' ,'required' => ''])); ?>
-
-                    </div>
-                    <div class="form-group col-md-12">
-                        <?php echo e(Form::label('email', 'Email:', 'class="control-label"')); ?>
-
-                        <?php echo e(Form::text('email', null,  ["class" => 'form-control', 'rows'=> '5' ,'required' => ''])); ?>
-
-                    </div>
-                    <div class="form-group col-md-6">
-                        <?php echo e(Form::label('password', 'Wachtwoord:', 'class="control-label"')); ?>
-
-                        <?php echo e(Form::password('password', ["class" => 'form-control', 'rows'=> '5' ,'required' => ''])); ?>
-
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
-                    </div>  
+                        <div class="form-group col-md-12">
+                            <?php echo e(Form::label('adres', 'Adres', 'class="control-label"')); ?>
 
-            </div>
+                            <?php echo e(Form::text('adres', null,  ["class" => 'form-control'])); ?>
 
-            <div class="col-md-5">
-                <div class= "well" id="logo_well">
-                    <a class="fancybox" href="/images/logos/<?php echo e(isset($group->logo) ? $group->logo : 'notfound.png'); ?>" id="fancyboximage">
-                        <img src="/images/logos/<?php echo e(isset($group->logo) ? $group->logo : 'notfound.png'); ?>" id="imagepreview" width="100%" class="img-responsive">
-                    </a>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-4">
+                            <?php echo e(Form::label('postcode', 'Postcode', 'class="control-label"')); ?>
+
+                            <?php echo e(Form::text('postcode', null,  ["class" => 'form-control'])); ?>
+
+                        </div>
+                        <div class="form-group col-sm-8 col-md-8">
+                            <?php echo e(Form::label('woonplaats', 'Woonplaats', 'class="control-label"')); ?>
+
+                            <?php echo e(Form::text('woonplaats', null,  ["class" => 'form-control', 'rows'=> '5'])); ?>
+
+                        </div>
+                        <div class="form-group col-md-12">
+                            <?php echo e(Form::label('email', 'Email', 'class="control-label"')); ?>
+
+                            <?php echo e(Form::text('email', null,  ["class" => 'form-control', 'rows'=> '5'])); ?>
+
+                        </div>
+
                 </div>
-                <div>
-                    <input type='file' name='image' id='image' onchange="readURL(this);" />
-                </div> 
-            </div>
+
+                <div class="col-md-5">
+
+                    <div class= "well" id="logo_well" style="width:50%; margin-top: 24px">
+                        <a class="fancybox" href="/images/logos/<?php echo e(isset($group->logo) ? $group->logo : 'bislogo.gif'); ?>" id="fancyboximage">
+                            <img src="/images/logos/<?php echo e(isset($group->logo) ? $group->logo : 'notfound.png'); ?>" id="imagepreview"    class="img-responsive">
+                        </a>
+                    </div>
+                    <div>
+                        
+                        <?php echo e(Form::file('image', ['id' => 'image', 'onchange' => 'readURL(this);'])); ?>
+
+                    </div> 
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-md-12" style="margin:15px">
+                        <button type="submit" class="btn btn-primary">Opslaan</button>
+                    </div>
+                </div>
 
             <?php echo Form::close(); ?>
 
@@ -83,6 +87,19 @@
     <script type="text/javascript" src="/js/jquery.fancybox.js"></script>
 
     <script type="text/javascript">
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var new_img = e.target.result;
+                    $('#imagepreview').attr('src', new_img);
+                    $("#fancyboximage").prop("href", new_img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
 
 		$(document).ready(function(){
 			$(".fancybox").fancybox({

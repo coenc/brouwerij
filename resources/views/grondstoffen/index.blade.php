@@ -7,13 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class = 'row'>
-        <div class="col-md-7 col-md-offset-1">
+        <div class="col-md-8 col-md-offset-1">
 
             <table id="grondstoftable" class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Categorie</th>
                         <th>Grondstof</th>
+                        <th>Categorie</th>
                         <th class="text-right">
                             <button id="btn-add" name="btn-add" class="btn btn-primary btn-xs">
                                 <span class="glyphicon glyphicon-plus"></span>Nieuw
@@ -25,8 +25,8 @@
                  <tbody id="tablebody">
                     @foreach($grondstoffen as $grondstof)
                         <tr id="grondstof{{ $grondstof->id }}">
-                            <td>{{ $grondstof->grondstofcategorie->omschrijving or ''}}</td>
                             <td>{{ $grondstof->naam or ''}}</td>
+                            <td>{{ $grondstof->grondstofcategorie->omschrijving or ''}}</td>
                             <td align="right">
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
@@ -50,7 +50,7 @@
             <div class="modal-content">
 
                 <div id="ajaxloader">
-                    <img src= 'images/ajax-loader.gif'>
+                    <img src= '/images/ajax-loader.gif'>
                     <div>Grondstof opslaan</div>
                 </div>
 
@@ -84,7 +84,7 @@
                     <div class="modal-footer">
                         <div class="col col-md-12">
                             <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
-                            <button type="button" class="btn btn-primary" id="btn-save" value="add">Save</button>
+                            <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                         </div>
                     </div><!-- modal footer -->
 
@@ -155,19 +155,14 @@
                 
                 swal({
                   title: 'Grondstof verwijderen?',
-                  text: "Weet u het zeker? Deze aktie kan niet ongedaan worden gemaakt!",
+                  html: "Deze aktie kan niet ongedaan worden gemaakt!<br/><br/>Weet u het zeker?",
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#d33',
                   cancelButtonColor: '#3085d6',
                   confirmButtonText: 'Verwijder'
                 }).then(function () {
-                    //AJAX caqll to delete grondstof
-                    // $.ajaxSetup({
-                    //     headers: {
-                    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    //     }
-                    // });
+                    //AJAX call to delete grondstof
                     $.ajax({
                         type: "DELETE",
                         url: url + '/' + grondstof_id,
@@ -194,7 +189,6 @@
             });
 
             //create new grondstof / update existing grondstof
-            // $("#btn-save").click(function (e) {
             $('#myModal').on('click','#btn-save', function(e){
                 
                 e.preventDefault();
@@ -225,10 +219,6 @@
                     type = "PUT"; //for updating existing resource
                     my_url = my_url + '/' + grondstof_id;
                 }
-               
-                // $.ajaxSetup({
-                //     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
-                // });
 
                 $.ajax({
                     type: type,
@@ -241,8 +231,8 @@
                     // contentType: false,
                     success: function (data) {
                         var table_row = '<tr grondstofid="' + data.id + '">';
-                        table_row += '<td>' + $('#grondstofcategorie_id').find('option:selected').text() + '</td>'
                         table_row += '<td>' + data.naam + '</td>';
+                        table_row += '<td>' + $('#grondstofcategorie_id').find('option:selected').text() + '</td>'
                         table_row += '<td align="right">';
                         table_row += '<button class="btn btn-warning btn-xs btn-detail open-modal" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         table_row += '<button class="btn btn-danger btn-xs btn-delete delete-grondstof" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
@@ -269,7 +259,5 @@
         });
 
     </script>
-
-    {{-- {!! Html::script('js/parsley.js') !!} --}}
 
 @endsection
