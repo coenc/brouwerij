@@ -16,9 +16,6 @@ var mapCenter = {lat: lat, lng: lon};
 var myMarkerLocation = new google.maps.LatLng(lat, lon);
 var marker = new google.maps.Marker;
 
-//$('#lat').text('lat=' + lat + ', lon=' + lon);
-//$('#lon').text('lat='+lon);
-
 //Create map
 map = new google.maps.Map(document.getElementById('map'), {
     center: mapCenter,
@@ -36,46 +33,58 @@ map = new google.maps.Map(document.getElementById('map'), {
         url: '/brouwerijenjson',
         dataType: 'json',
         success: function (data) {
-            // console.log(data);
+            
+            //Loop through results of AJAX call
             for(var i in data)
             {
                 var naam = data[i].naam;
                 var adres = data[i].adres;
                 var postcode = data[i].postcode;
                 var plaats = data[i].plaats;
-                console.log(naam + ' ' + adres + ' ' + postcode + ' ' + plaats);
+                var lat = data[i].lat;
+                var lon = data[i].lon;
+
+                console.log(naam + ' ' + adres + ' ' + postcode + ' ' + plaats + ' ' + data[i].lat + ' ' + data[i].lon);
+
+                var geocoder = geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address':  postcode + '%20' + plaats }, function (results, status) {
+                    //console.log(results[0].geometry.location);
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            console.log('xxx' + results[0].geometry.location);
+                        }
+                    }
+                    else
+                    {
+                        console.log('No geocode data found');
+                    }
+                });
+
+                // Create markers for each brouwerij
+                var marker = new google.maps.Marker({
+                    position: {lat: lat, lng: lon},
+                    map: map,
+                    icon: '/images/marker.png',
+                    title: naam + '\n' + adres + '\n' + postcode + ' ' + plaats
+                });
+
+                //Create text annotation
+                var myInfoWindowContent = '<div id="infowindow"><strong>' + naam + '</strong><br>' + adres + '<br>' + postcode + ' ' + plaats + '</div>';
+                var infowindow = new google.maps.InfoWindow({
+                    content: myInfoWindowContent
+                });
+
+                //Create the info window for the marker
+                infowindow.open(map,marker);
+
             }
+
 
         },
         error: function (data) {
             console.log('Error in jsonbrouwerijen:', data);
         }
     });
-
-
-
-
-
-
-//Place a marker on the map
-var marker = new google.maps.Marker({
-    position: {lat: lat, lng: lon},
-    map: map,
-    icon: '/images/marker.png',
-    title: "Jouw locatie"
-});
-
-//Create text annotation
-var myInfoWindowContent = '<div id="iw-container"><div class="iw-title">Uw locatie</div><div id="iw-text0"></div><div id="iw-text1"></div><div id="iw-lat">lat</div><div id="iw-lon">lon</div></div>';
-
-var infowindow = new google.maps.InfoWindow({
-    content: myInfoWindowContent
-});
-
-//Create the info window for the marker
-infowindow.open(map,marker);
-
-
 
 //Get address
 var latlng = new google.maps.LatLng(lat, lon);

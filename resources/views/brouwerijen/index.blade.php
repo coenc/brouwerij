@@ -10,28 +10,17 @@
         height: 800px;
         background-color: grey;
       }
+      #infowindow{
+      	width: 100%;
+      	color: black;
+      }
     </style>
 
     <div class = 'row'>
-        <div class="col-md-11 col-md-offset-1">
-
-        
-
-			<!-- Content -->
-	        <div data-role="content">
-	            
-	            <!-- GoogleMaps  -->
-	            {{-- <div id="hourglass"><img src="css/images/ajax-loader.gif"></div> --}}
-	            <div>
-	                <div id="lat" style="position:relative;"></div>
-	                <div id="lon" style="position:relative;"></div>
-	            </div>
-	            <div id="map"></div>
-	            <!-- /GoogleMaps -->
-	            
-	        </div>
-	        <!-- /Content -->
-
+        <div class="cont col-md-11 col-md-offset-1">
+			<!-- GoogleMaps  -->
+			<div id="map"></div>
+			<!-- /GoogleMaps -->
         </div>
     </div>
 
@@ -40,7 +29,7 @@
 
 @section('scripts')
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP4NJgNqzDrF5QULb-PAxWEwCkNoP0H_I&libraries=places" async defer></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP4NJgNqzDrF5QULb-PAxWEwCkNoP0H_I&libraries=places" async defer></script>
     <script type="text/javascript" src="js/googlemaps.js"></script>
 
 @endsection
