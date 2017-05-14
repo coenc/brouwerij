@@ -54,6 +54,8 @@
 						<li class="{{Request::is('klanten') ? 'active' : ''}} disabled"><a href="/klanten">Klanten</a></li>
 						<li class="divider"></li>
 						<li class="{{Request::is('leveranciers') ? 'active' : ''}}"><a href="/leveranciers">Leveranciers</a></li>
+						<li class="divider"></li>
+						<li class="{{Request::is('brouwerijen') ? 'active' : ''}}"><a href="/brouwerijen">Brouwerijen</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">

@@ -63,3 +63,5 @@ Route::resource('mijnprofiel', 'ProfielController');
 Route::get('rapportage/productie', 'RapportageController@productie');
 Route::get('rapportagedata', 'RapportageController@servedata');
 Route::get('rapportage/accijnsafdracht', 'RapportageController@accijnsAfdracht');
+
+Route::get('brouwerijen', 'BrouwerijenController@index');
