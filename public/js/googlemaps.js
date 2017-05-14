@@ -27,7 +27,35 @@ map = new google.maps.Map(document.getElementById('map'), {
                 //google.maps.MapTypeId.SATELLITE
                 //google.maps.MapTypeId.HYBRID
                 //google.maps.MapTypeId.TERRAIN
-});
+    });
+
+    
+    //AJAX call to get brouwerijen in Nederland
+    $.ajax({
+        type: 'GET',
+        url: '/brouwerijenjson',
+        dataType: 'json',
+        success: function (data) {
+            // console.log(data);
+            for(var i in data)
+            {
+                var naam = data[i].naam;
+                var adres = data[i].adres;
+                var postcode = data[i].postcode;
+                var plaats = data[i].plaats;
+                console.log(naam + ' ' + adres + ' ' + postcode + ' ' + plaats);
+            }
+
+        },
+        error: function (data) {
+            console.log('Error in jsonbrouwerijen:', data);
+        }
+    });
+
+
+
+
+
 
 //Place a marker on the map
 var marker = new google.maps.Marker({
@@ -38,7 +66,7 @@ var marker = new google.maps.Marker({
 });
 
 //Create text annotation
-var myInfoWindowContent = '<div id="iw-container"><div class="iw-title">Hier ben je!!!</div><div id="iw-text0"></div><div id="iw-text1"></div><div id="iw-lat">lat</div><div id="iw-lon">lon</div></div>';
+var myInfoWindowContent = '<div id="iw-container"><div class="iw-title">Uw locatie</div><div id="iw-text0"></div><div id="iw-text1"></div><div id="iw-lat">lat</div><div id="iw-lon">lon</div></div>';
 
 var infowindow = new google.maps.InfoWindow({
     content: myInfoWindowContent

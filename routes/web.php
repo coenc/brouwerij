@@ -65,3 +65,4 @@ Route::get('rapportagedata', 'RapportageController@servedata');
 Route::get('rapportage/accijnsafdracht', 'RapportageController@accijnsAfdracht');
 
 Route::get('brouwerijen', 'BrouwerijenController@index');
+Route::get('brouwerijenjson', 'BrouwerijenController@brouwerijen');
