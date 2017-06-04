@@ -180,13 +180,15 @@ class BrouwselController extends Controller
         $totaal_beschikbaar = DB::select(DB::raw('
                                             SELECT SUM(hoeveelheidkg - verbruiktkg) AS totaalbeschikbaar
                                             FROM inkoopgrondstof 
-                                            WHERE grondstof_id = :grondstof
+                                            WHERE isnull(deleted_at)
+                                            AND grondstof_id = :grondstof
                                         '), array('grondstof' => $grondstof)
                                     );
 
         
         $beschikbare_kg_grondstof = $totaal_beschikbaar[0]->totaalbeschikbaar;
         Log::info('Totaal beschikbare kg grondstof ' . $grstf_naam . ' = kg ' . $beschikbare_kg_grondstof);
+        Log::info('Benodigd aant kg grondstof ' . $aantkg);
 
         if ($beschikbare_kg_grondstof >= $aantkg){
             //Er is met zekerheid voldoende aanwezig van deze huidige grondstof
@@ -198,7 +200,8 @@ class BrouwselController extends Controller
 
             $beschikbaar = DB::select(DB::raw(' SELECT id, grondstof_id, hoeveelheidkg, verbruiktkg 
                                                 FROM inkoopgrondstof 
-                                                WHERE grondstof_id = :grondstof
+                                                WHERE isnull(deleted_at)
+                                                AND grondstof_id = :grondstof
                                                 AND (hoeveelheidkg - verbruiktkg) > 0 '), 
                                         array('grondstof' => $grondstof) //for prepared statement
                                         );
@@ -206,15 +209,14 @@ class BrouwselController extends Controller
             foreach($beschikbaar as $key => $value){
 
                 if(($value->hoeveelheidkg - $value->verbruiktkg) >= $te_vinden_kg){
-                    //Voldoende hoeveelheid gevonden. schrijf hoeveelheid af en stop met zoeken
-                    
-                    Log::info('Gevonden grondstof: ' . $value->grondstof_id);
+                    //Voldoende hoeveelheid gevonden. schrijf hoeveelheid af en stop met zoeken                    
+                    Log::info('Gevonden grondstofid: ' . $value->grondstof_id);
 
                     $totnutoe_gevondenkg = $te_vinden_kg;
-
-                    $update = Inkoopgrondstof::find($value->id);
-                    $update->verbruiktkg = $value->verbruiktkg + $aantkg;
-                    $update->save();
+                    $updte = Inkoopgrondstof::find($value->id);
+                    $updte->verbruiktkg = $value->verbruiktkg + $aantkg;
+                    $updte->save();
+                    
                     $resteert_te_vinden = 0;
 
                     break 1; //Exit foreach 1 level
@@ -222,14 +224,14 @@ class BrouwselController extends Controller
                 }elseif(($value->hoeveelheidkg - $value->verbruiktkg) < $te_vinden_kg){
                     //NIET voldoende grondstof in deze inkoop, schrijf BESCHIKBARE hoeveelheid af en zoek door
 
-                    $update = Inkoopgrondstof::find($value->id);
+                    $updte = Inkoopgrondstof::find($value->id);
                     
                     $gevonden = $value->hoeveelheidkg - $value->verbruiktkg;
                     $totnutoe_gevondenkg = $totnutoe_gevondenkg + $gevonden;
                     $resteert_te_vinden = $resteert_te_vinden - $gevonden;
 
-                    $update->verbruiktkg = $update->verbruiktkg + $gevonden;
-                    $update->save();
+                    $updte->verbruiktkg = $updte->verbruiktkg + $gevonden;
+                    $updte->save();
 
                     if ($gevonden >= $aantkg){
                         break 1;
@@ -238,7 +240,7 @@ class BrouwselController extends Controller
             }
 
             Log::info('Grondstof geheel beschikbaar: ' . $grondstof . ' (' . $aantkg . ' kg)');            
-            //Registreer verbruik in tabel Inkoopgrondstof
+            
             $response = array();
             $response['code'] = 200;
             $response['grondstof_id'] = $grondstof;

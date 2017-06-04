@@ -231,7 +231,7 @@
                     success: function (data) {
 
                         if(data.message == 'ERROR'){
-                            $('#newbrouwselerror').html("<strong>Waarschuwing grondstof tekort:</strong><br><strong>NIEUWE PRODUCTIE NIET OPGESLAGEN.</strong><br><br>Er is onvoldoende voorraad grondstoffen voor " + $('#liters').val() + ' ' + $("#biersoort_id :selected").text() + ".<br><br>Dit wordt veroorzaakt door een tekort aan de onderstaande grondstoffen:" + data.details);
+                            $('#newbrouwselerror').html("<strong>Waarschuwing grondstof tekort:</strong><br><strong>NIEUWE PRODUCTIE NIET OPGESLAGEN.</strong><br><br>Er is onvoldoende voorraad grondstoffen voor " + $('#liters').val() + ' eenheden ' + $("#biersoort_id :selected").text() + ".<br><br>Dit wordt veroorzaakt door een tekort aan de onderstaande grondstoffen:" + data.details);
                             $('#newbrouwselerror').show();
                         }
 

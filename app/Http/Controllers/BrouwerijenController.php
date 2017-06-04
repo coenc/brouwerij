@@ -11,9 +11,6 @@ class BrouwerijenController extends Controller
 	public function index()
 
     {
-    	// $brouwerijen = Brouwerij::all()->sortBy('id');	
-    	// $brouwerijen = json_encode($brouwerijen);
-    	// echo($brouwerijen);
 
         return view('brouwerijen.index')->with('brouwerijen');
         
@@ -21,8 +18,10 @@ class BrouwerijenController extends Controller
 
     public function brouwerijen()
     {
-    	$brouwerijen = Brouwerij::all()->sortBy('id');
-    	// $brouwerijen = json_encode($brouwerijen);
+    	$brouwerijen = Brouwerij::inRandomOrder()->limit(10)->get();
+        // $brouwerijen = Brouwerij::get();
+        
     	return Response::json($brouwerijen);
     }
+
 }
