@@ -29,7 +29,7 @@
 
 @section('scripts')
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP4NJgNqzDrF5QULb-PAxWEwCkNoP0H_I&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP4NJgNqzDrF5QULb-PAxWEwCkNoP0H_I&libraries=places"></script>
     <script type="text/javascript" src="js/googlemaps.js"></script>
 
 @endsection
