@@ -50,7 +50,7 @@
         geocoder.geocode({'address': pQuery, 
                                 componentRestrictions: 
                                 {
-                                    // country: 'NL',
+                                    country: 'NL',
                                     postalCode: pPostcode
                                 },
                                 

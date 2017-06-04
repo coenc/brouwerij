@@ -90,7 +90,7 @@ class BrouwselController extends Controller
             
             if( $avail['code'] <> 200 ){
                 $warning = true;
-                $warninggrondstoffen[] = '<br>Tekort aan grondstof ' . $grondstofnaam->naam . ' (' . $aantalkilo . ' kg)';
+                $warninggrondstoffen[] = '<br>Tekort aan grondstof ' . $grondstofnaam->naam . ' (' . number_format($aantalkilo, 3, ',', '.') . ' kg)';
             };
         }
 
