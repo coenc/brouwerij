@@ -148,7 +148,7 @@
                 
                 <div class="modal-footer">
                     <div class="col col-md-12">
-                        <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btn-cancel">Annuleren</button>
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->

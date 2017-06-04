@@ -43,7 +43,9 @@
                                 <div class="input-group">                    
                                     <div class="input-group-btn">
                                         <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="{{$inkoopgrondstof->id}}"><span class="glyphicon glyphicon-edit"></span><div class="buttontext">Bewerk</div></button> 
-                                        <button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="{{$inkoopgrondstof->id}}"><span class="glyphicon glyphicon-remove"></span><div class="buttontext">Verwijder</div></button>
+                                        
+                                        <button @if ($inkoopgrondstof->verbruiktkg > 0) disabled @endif class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="{{$inkoopgrondstof->id}}"><span class="glyphicon glyphicon-remove" ></span><div class="buttontext">Verwijder</div></button>
+
                                     </div>
                                 </div>
                             </td>
