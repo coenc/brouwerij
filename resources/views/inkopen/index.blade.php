@@ -115,7 +115,7 @@
                 
                 <div class="modal-footer">
                     <div class="col col-md-12">
-                        <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btn-cancel">Annuleren</button>
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
@@ -153,7 +153,7 @@
             });
 
             
-            //display modal form for biersoort editing
+            //display modal form for inkoop editing
             $('#inkooptabel').on('click','.open-modal', function(){
                 var inkoop_id = $(this).val();
                 $.get(url + '/' + inkoop_id, function (data) {
@@ -172,7 +172,7 @@
                 }) 
             });
 
-            //delete biersoort and remove from table
+            //delete inkoop and remove from table
             $('#inkooptabel').on('click','.btn-delete', function(){
 
                 var inkoop_id = $(this).val();
@@ -253,14 +253,13 @@
                         console.log('AJAX call success: data=>>>');
                         console.log(data);
 
-                        var inkooprow = '<tr biersoortid="' + data.id + '">';
+                        var inkooprow = '<tr id="inkoop' + data.id + '">';
                         inkooprow += '<td>' + data.datum + '</td>';
                         inkooprow += '<td>' + $('#grondstof_id').find('option:selected').text() + '</td>'
                         // inkooprow += '<td class="text-right">' + data.hoeveelheidkg + '</td>';
                         inkooprow += '<td class="text-right">&euro;' + data.prijsexbtw + '</td>';
                         inkooprow += '<td data-order="" class="text-right">0/' + data.hoeveelheidkg + '</td>';
                         inkooprow += '<td class="text-right"><div style="position:absolute; width:44px;height:10px;margin-top:5px;background-color: green;"></div></td>';
-
                         inkooprow += '<td class="text-right">';
                         inkooprow += '<button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         inkooprow += '<button class="btn btn-danger btn-xs btn-delete delete-inkoop but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';

@@ -70,7 +70,7 @@
                 
                 <div class="modal-footer">
                     <div class="col col-md-12">
-                        <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btn-cancel">Annuleren</button>
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
@@ -156,6 +156,7 @@
                         var grondstofcatrow = '<tr grondstofcatid="' + data.id + '">';
                         grondstofcatrow += '<td>' + data.omschrijving + '</td>';
                         grondstofcatrow += '<td class="text-right">';
+                        grondstofcatrow += '<a href="/grondstoffen/cat/' + data.id + '" title="Toon grondstoffen uit categorie" class="btn btn-info btn-xs but-spacing" role="button"><span class="glyphicon glyphicon-list"></span></a>';
                         grondstofcatrow += '<button class="btn btn-warning btn-xs btn-detail open-modal" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         grondstofcatrow += '<button class="btn btn-danger btn-xs btn-delete delete-grondstofcat" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
                         grondstofcatrow += '</td>';

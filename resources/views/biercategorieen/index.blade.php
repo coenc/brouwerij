@@ -80,7 +80,7 @@
                 
                 <div class="modal-footer">
                     <div class="col col-md-12">
-                        <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btn-cancel">Annuleren</button>
                         <button type="button" class="btn btn-primary" id="btn-save" value="add">Opslaan</button>
                     </div>
                 </div><!-- modal footer -->
@@ -193,6 +193,7 @@
                         var biercatrow = '<tr id=biercat' + data.id + '>';
                         biercatrow += '<td>' + data.omschrijving + '</td>';
                         biercatrow += '<td class="text-right">';
+                        biercatrow += '<a href="/producten/cat/' + data.id + '" title="Toon producten uit deze categorie" class="btn btn-info btn-xs but-spacing" role="button"><span class="glyphicon glyphicon-list"></span></a>';
                         biercatrow += '<button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         biercatrow += '<button class="btn btn-danger btn-xs btn-delete delete-biersoort but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
                         biercatrow += '</td>';

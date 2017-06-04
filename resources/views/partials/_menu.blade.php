@@ -15,7 +15,7 @@
 			<ul class="nav navbar-nav">
 
 			@if(Auth::check())
-				
+
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Producten<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-star-empty"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
@@ -23,9 +23,7 @@
 						<li class="{{Request::is('productcategorieen') ? 'active' : ''}}"><a href="/productcategorieen">Productcategorieën</a></li>
 					</ul>
 				</li>	
-
-				<li class="{{Request::is('recepten') ? 'active' : ''}}"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
-
+				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Grondstoffen<span class="caret"></span><span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-grain"></span></a>
 					<ul class="dropdown-menu forAnimate" role="menu">
@@ -37,7 +35,12 @@
 
 					</ul>
 				</li>				
-				
+
+
+
+				<li class="{{Request::is('recepten') ? 'active' : ''}}"><a href="/recepten">Recepten<span style="font-size:16px;" class="pull-left hidden-xs showopacity"><i class="icon-copy" style="margin-right:5px"></i></span></a></li>
+
+
 				<li class="{{Request::is('productie') ? 'active' : ''}}"><a href="/productie">Productie<span style="font-size:16px;" class="pull-left hidden-xs showopacity glyphicon glyphicon-tint"></span></a></li>
 				
 				<li class="dropdown">
