@@ -241,7 +241,7 @@
             var biersoort_id = $(this).val();
             console.log('biersoort_id:' + biersoort_id);
             var image = '';
-
+            $('#ajaxloader').hide();
             $('#beerdetails').hide();
 
             $.get(url + '/' + biersoort_id, function (data) {

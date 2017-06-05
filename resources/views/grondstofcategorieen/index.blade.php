@@ -120,8 +120,6 @@
                 }) 
             });
 
-            //create new biersoort / update existing grondstofcategorie
-            
             $('#myModal').on('click','#btn-save', function(e){
                 
                 e.preventDefault();
@@ -164,7 +162,8 @@
 
                         if (state == "add"){ //if user added a new record
                             $('#grondstofcatbody').prepend(grondstofcatrow);
-                        }else{ //if user updated an existing record
+                        }else{ 
+                            //User updated an existing record
                             $("#grondstofcat" + data.id).replaceWith(grondstofcatrow);
                         }
 

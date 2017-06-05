@@ -28,7 +28,7 @@
                             <td>{{ $grondstof->naam or ''}}</td>
                             <td>{{ $grondstof->grondstofcategorie->omschrijving or ''}}</td>
                             <td align="right">
-                                <div class="input-group">                    
+                                <div class="input-group">
                                     <div class="input-group-btn">
                                         <button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="{{$grondstof->id}}"><span class="glyphicon glyphicon-edit"></span>Bewerk</button> 
                                         <button class="btn btn-danger btn-xs btn-delete delete-grondstof but-spacing" value="{{$grondstof->id}}"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>
@@ -191,9 +191,9 @@
             //create new grondstof / update existing grondstof
             $('#myModal').on('click','#btn-save', function(e){
                 
-                e.preventDefault();
-
                 $('#ajaxloader').show();
+
+                e.preventDefault();
 
                 // var form = document.forms.namedItem('uploadForm');
                 // var formdata = new FormData(form);
@@ -206,8 +206,6 @@
                     naam: $('#naam').val(),
                     grondstofcategorie_id: $('#grondstofcategorie_id').val(),
                 }
-
-                console.info(formData);
 
                 //determine the http action [add=POST], [update=PUT]
                 var state = $('#btn-save').val();
@@ -234,8 +232,12 @@
                         table_row += '<td>' + data.naam + '</td>';
                         table_row += '<td>' + $('#grondstofcategorie_id').find('option:selected').text() + '</td>'
                         table_row += '<td align="right">';
-                        table_row += '<button class="btn btn-warning btn-xs btn-detail open-modal" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
-                        table_row += '<button class="btn btn-danger btn-xs btn-delete delete-grondstof" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
+                        table_row += '<div class="input-group">';
+                        table_row += '<div class="input-group-btn">';
+                        table_row += '<button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
+                        table_row += '<button class="btn btn-danger btn-xs btn-delete delete-grondstof but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
+                        table_row += '</div>';
+                        table_row += '</div>';
                         table_row += '</td>';
                         table_row += '</tr>';
 
@@ -245,15 +247,12 @@
                             $("#grondstof" + data.id).replaceWith(table_row);
                         }
 
-                        $('#ajaxloader').hide();
-                        $('#myModal').modal('hide');
-
                     },
                     error: function (data) {
                         console.log('Error in postPOST/PUT (grondstof):', data);
-                         $('#ajaxloader').hide();
                     }
                 });
+                $('#myModal').modal('hide');
             });
 
         });

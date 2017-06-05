@@ -30,7 +30,7 @@
                 <tr> 
                     <th>Kg</th>
                     <th>Grondstof</th>
-                    <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw ingrdiënt</button></th>
+                    <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>Nieuw ingrediënt</button></th>
                 </tr>
                 </thead>
                 <tbody id="recept_body">
@@ -165,7 +165,7 @@
                 $.each(json_data, function(index){
                     //alert(json_data[index].id + json_data[index].hoeveelheid + json_data[index].naam);
                     table_body += "     <tr id='recept" + json_data[index].id + "'>";
-                    table_body += "         <td>" + json_data[index].hoeveelheid + "</td>";
+                    table_body += "         <td>" + parseFloat(json_data[index].hoeveelheid).toFixed(3) + "</td>";
                     table_body += "         <td>" + json_data[index].naam + "</td>";
                     table_body += "         <td  align='right'>"
                     table_body += "             <div class='input-group'>";
@@ -245,7 +245,7 @@
                     //update row from table
                     var updated_row = '';
                     updated_row += "     <tr id='recept" + json_data.id + "'>";
-                    updated_row += "         <td>" + json_data.hoeveelheid + "</td>";
+                    updated_row += "         <td>" + parseFloat(json_data.hoeveelheid).toFixed(3) + "</td>";
                     updated_row += "         <td>" + $('#grondstof_id').find('option:selected').text() + "</td>";
                     updated_row += "         <td  align='right'>"
                     updated_row += "             <div class='input-group'>";

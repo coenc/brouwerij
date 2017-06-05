@@ -193,9 +193,11 @@
                         var biercatrow = '<tr id=biercat' + data.id + '>';
                         biercatrow += '<td>' + data.omschrijving + '</td>';
                         biercatrow += '<td class="text-right">';
+                        biercatrow += '<div class="input-group-btn">';
                         biercatrow += '<a href="/producten/cat/' + data.id + '" title="Toon producten uit deze categorie" class="btn btn-info btn-xs but-spacing" role="button"><span class="glyphicon glyphicon-list"></span></a>';
                         biercatrow += '<button class="btn btn-warning btn-xs btn-detail open-modal but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-edit"></span>Bewerk</button>';
                         biercatrow += '<button class="btn btn-danger btn-xs btn-delete delete-biersoort but-spacing" value="' + data.id + '"><span class="glyphicon glyphicon-remove"></span>Verwijder</button>';
+                        biercatrow += '</div">';
                         biercatrow += '</td>';
                         biercatrow += '</tr>';
 
