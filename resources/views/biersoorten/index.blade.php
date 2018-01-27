@@ -17,7 +17,7 @@
 
     <div class = 'row'>
 
-        <div class="col-md-8 col-md-offset-1">
+        <div class="col-md-4 col-md-offset-1">
 
             <table id="biertabel" class="table table-striped table-hover">
                 <thead>
@@ -26,7 +26,7 @@
                         <th class="text-left">{{Lang::get('custom.name')}}</th>
                         <th class="hidden-sm hidden-xs">{{Lang::get('custom.category')}}</th>
                         <th width="50px" class="text-center hidden-sm hidden-xs">{{Lang::get('custom.vastseizoen')}}</th>
-                        <th class="text-center">Afbeelding</th>
+                        <th class="text-center hidden-sm hidden-xs">Afbeelding</th>
                         <th class="text-right"><button id="btn-add" name="btn-add" class="btn btn-primary btn-xs but-spacing"><span class="glyphicon glyphicon-plus"></span>{{Lang::get('custom.new')}}</button></th>
                      </tr>
                  </thead>
@@ -50,7 +50,7 @@
 
                             </td>
                             <td class="text-right">
-                                <div class="input-group">                    
+                                <div class="input-group">
                                     <div class="input-group-btn">
                                         <button class="btn btn-warning btn-xs btn-detail but-spacing open-modal" value="{{$biersoort->id}}"><span class="glyphicon glyphicon-edit"></span>{{Lang::get('custom.edit')}}</button> 
                                         <button class="btn btn-danger btn-xs btn-delete but-spacing delete-biersoort" value="{{$biersoort->id}}"><span class="glyphicon glyphicon-remove"></span>{{Lang::get('custom.delete')}}</button>
@@ -357,7 +357,7 @@
                 data: formdata,
                 contentType: false,       // The content type used when sending data to the server.
                 cache: false,             // To unable request pages to be cached
-                processData: false,        // To send DOMDocument or non processed data file it is set to false
+                processData: false,       // To send DOMDocument or non processed data file it is set to false
                 success: function (data) {
 
                     var bierrow = '<tr id=biersoort' + data.id + '">';
@@ -365,9 +365,7 @@
                     bierrow += '<td>' + data.omschrijving + '</td>';
                     bierrow += '<td class="hidden-sm hidden-xs">' + $('#beercategory_id').find('option:selected').text() + '</td>'
                     bierrow += '<td class="text-center hidden-sm hidden-xs">' + $('#vastofseizoen').val() + '</td>'
-
                     bierrow += '<td class="text-center hidden-sm hidden-xs"><a class="fancybox" href="/images/biersoorten/' + data.group_id + '/' + data.image + '" id="fancyboximage">afbeelding</a></td>';
-
                     bierrow += '<td class="text-right">';
                     bierrow += '<div class="input-group">';
                     bierrow += '<div class="input-group-btn">';

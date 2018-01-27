@@ -26,6 +26,29 @@
             // console.log(JSON.stringify(data));
             //Loop through results
             $.each(data, function(i,data) {
+
+                //If lat/lon unknown then update in db
+                // if (!data.lat || !data.lon) {
+                //     console.log('lat and/or lon unknown');
+
+                //     $.ajax({
+                //         //type: 'GET',
+                //         url: '/updatelatlon',
+                //         dataType: 'json',
+                //         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                //         data: '{"id":' + data.id + '"lat":' + data.lat + ', "lon":' + data.lon +'}',
+                //         success: function (data, result) {
+                            
+                //             console.log('RESULT:' + result);
+
+                //         },
+                //         error: function (data) {
+                //             console.log('Error in updatelat/lon:', data);
+                //         }
+                //     });
+
+                // }
+                
                 
                 var query = encodeURI(data.adres + ' ' + data.plaats);
                 var address = data.naam + '\n' + data.adres + '\n' + data.postcode + ' ' + data.plaats + '\n' + data.telefoon
@@ -74,7 +97,9 @@
                 var infowindow = new google.maps.InfoWindow({
                     content: myInfoWindowContent
                 });
+                
                 infowindow.open(map,marker);
+                return(results[0].geometry.location.lat());
             }else{
                 console.log('Geocoding error: ' + status + ' voor adres ' + pAddress);
             }

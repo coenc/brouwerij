@@ -32,7 +32,7 @@
 		    yAxis: {
 		        min: 0,
 		        title: {
-		            text: 'Total in ltr'
+		            text: 'Totaal in HL'
 		        },
 		        stackLabels: {
 		            enabled: true,

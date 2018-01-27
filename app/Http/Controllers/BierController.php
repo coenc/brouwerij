@@ -199,7 +199,7 @@ class BierController extends Controller
             foreach ($raw_headers as $header) {
                 list($name, $value) = explode(':', $header);
                 $headers[strtolower($name)] = ltrim($value, ' '); 
-            } 
+            }
 
             // Parse the Content-Disposition to get the field name, etc.
             if (isset($headers['content-disposition'])) {

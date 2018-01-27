@@ -10,7 +10,7 @@
     <br>
 
     <p><strong>SECURITY</strong></p>
-    <p>All data is securely behind a safe login system. The application has been secured against XSS Cross Site Scripting and code injection. Passwords are stored in encrypted format. The application is hosted on Amazon.</p>
+    <p>All data is securely behind a safe login system. The application has been secured against XSS Cross Site Scripting and code injection. Passwords are stored in encrypted format. The application is hosted on Amazon with SSL encrypted communications.</p>
 
     <p><strong>JAVASCRIPT LIBRARIES</strong></p>
     <p>Besides the Laravel framework, the following Javascript libraries have been used:
