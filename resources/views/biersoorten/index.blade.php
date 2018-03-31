@@ -225,6 +225,10 @@
 
     <script type="text/javascript">
 
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+
         $('.show_beerdetails').click(function(){
             $('#beerdetails').slideToggle(500);
         });
@@ -413,7 +417,9 @@
 
         $(document).ready(function(){
 
-            $('[data-toggle="tooltip"]').tooltip();
+            // $('[data-toggle="tooltip"]').tooltip({
+            //     container: 'body'
+            // });
 
             $(".fancybox").fancybox({
                 closeBtn    : 'true',
