@@ -1,9 +1,30 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <script src="/js/jquery.min.js"></script>
-    
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/js.cookie.js"></script><!-- https://github.com/js-cookie/js-cookie  -->
+
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('c628125df01b182b5e93', {
+          cluster: 'eu',
+          encrypted: true
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+          alert(data.message);
+        });
+    </script>
+
+
+
+
     <!--Bootstrap-->
     {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> --}}
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,7 +40,7 @@
     <link rel="stylesheet" type="text/css" href="/css/datatables.min.css"/>
     
     {{-- Font awesome --}}
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    {{-- <link href="/css/font-awesome.css" rel="stylesheet"> --}}
     
     <style>
 

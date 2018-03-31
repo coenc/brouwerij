@@ -4,7 +4,9 @@
 
 @section('css')
     <style>
-    /*comment*/
+        #mySelect{
+            margin-left: 30px;
+        }
     </style>
 @endsection
 

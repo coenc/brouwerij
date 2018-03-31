@@ -55,9 +55,9 @@ class RapportageController extends Controller
                     ->groupby('datum')
                     ->orderBy('datum', 'ASC')
                     ->get();
-        echo('<pre>');
-        var_dump(json_encode($datums));
-        echo('</pre>');
+        // echo('<pre>');
+        // var_dump(json_encode($datums));
+        // echo('</pre>');
 
         foreach ($datums as $datum) {
             
@@ -103,20 +103,16 @@ class RapportageController extends Controller
                     ->whereRaw('ISNULL (deleted_at)')
                     ->orderBy('id', 'ASC')
                     ->get();
-        echo('<pre>');
-        var_dump(json_encode($biersoorten));
-        echo('</pre>');
 
+        // echo('<pre>');
+        // var_dump(json_encode($biersoorten));
+        // echo('</pre>');
 
-
-
-
-
-        echo('<pre>');
-        echo(json_encode($xas));
-        echo('<br>');
-        echo(json_encode($data));
-        echo('</pre>');
+        // echo('<pre>');
+        // echo(json_encode($xas));
+        // echo('<br>');
+        // echo(json_encode($data));
+        // echo('</pre>');
 
 
         return view('rapportages.rapportageproductie')

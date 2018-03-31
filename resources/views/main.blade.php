@@ -13,19 +13,19 @@
         @include('partials._messages')
 
         <div class="content">
-		<div class="container">
+			<div class="container">
 
-		    <div class="page-header">
-		        <div class="row">
-		            <div class="col-md-8">
-		                <h3>@yield('title')</h3>    
-		            </div>
-		        </div>
-		    </div>
+			    <div class="page-header">
+			        <div class="row">
+			            <div class="col-md-8">
+			                <h3>@yield('title')</h3>    
+			            </div>
+			        </div>
+			    </div>
 
-	        @yield('content')
-        
-        </div><!--div content-->
+		        @yield('content')
+	        
+	        </div><!--div content-->
 
         </div><!--div container-->
 
